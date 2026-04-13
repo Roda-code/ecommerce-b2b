@@ -34,7 +34,11 @@ campanas_mensuales = [
 # ============================================================
 # CLIENTES (de Venta por Cliente.xlsx 2025-2026)
 # ============================================================
-with open('/sessions/optimistic-intelligent-brown/clientes_data.json') as f:
+import os
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(SCRIPT_DIR, '..', 'data')
+DOCS_DIR = os.path.join(SCRIPT_DIR, '..', 'docs')
+with open(os.path.join(DATA_DIR, 'clientes_data.json')) as f:
     clientes = json.load(f)
 
 # ============================================================
@@ -574,9 +578,10 @@ new Chart(document.getElementById('chartVendedores'), {{
 </html>
 """
 
-output_path = "/sessions/optimistic-intelligent-brown/mnt/Clinical Dev - ClinicalMarket, Gesmed y Profar/Dashboard_ClinicalMarket_v5_2026.html"
+os.makedirs(DOCS_DIR, exist_ok=True)
+output_path = os.path.join(DOCS_DIR, 'index.html')
 with open(output_path, 'w', encoding='utf-8') as f:
     f.write(HTML)
 
-print(f"✅ Dashboard v5 generado: {output_path}")
-print(f"📏 Tamaño: {len(HTML)/1024:.1f} KB · {HTML.count(chr(10))} líneas")
+print(f"Dashboard v5 generado: {output_path}")
+print(f"Tamano: {len(HTML)/1024:.1f} KB - {HTML.count(chr(10))} lineas")
