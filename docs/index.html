@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClinicalMarket B2B — Dashboard Operativo v5</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Poppins',sans-serif; background:#F5F7FA; color:#1A2B4C; line-height:1.5; }
+.header { background:linear-gradient(135deg,#0688E2 0%,#0DA7EE 100%); color:#fff; padding:32px 48px; }
+.header h1 { font-size:28px; font-weight:700; margin-bottom:6px; }
+.header .sub { font-size:13px; opacity:0.92; }
+.header .meta { margin-top:14px; display:flex; gap:18px; font-size:12px; opacity:0.85; }
+.tabs { background:#fff; padding:0 48px; border-bottom:2px solid #E8EDF3; display:flex; gap:4px; overflow-x:auto; }
+.tab { padding:16px 22px; cursor:pointer; border:none; background:transparent; font-family:inherit; font-size:13px; font-weight:600; color:#7A8AA8; border-bottom:3px solid transparent; transition:all .2s; white-space:nowrap; }
+.tab:hover { color:#0DA7EE; }
+.tab.active { color:#0688E2; border-bottom-color:#0DA7EE; }
+.content { padding:32px 48px; }
+.panel { display:none; }
+.panel.active { display:block; }
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; margin-bottom:28px; }
+.kpi { background:#fff; padding:22px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,.06); border-left:4px solid #0DA7EE; }
+.kpi.alt { border-left-color:#FF9F1C; }
+.kpi.warn { border-left-color:#E63946; }
+.kpi.good { border-left-color:#06D6A0; }
+.kpi .label { font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:#7A8AA8; font-weight:600; margin-bottom:8px; }
+.kpi .val { font-size:26px; font-weight:700; color:#0688E2; }
+.kpi .sub { font-size:11px; color:#7A8AA8; margin-top:6px; }
+.kpi .badge { display:inline-block; padding:2px 8px; background:#0DA7EE; color:#fff; border-radius:10px; font-size:10px; font-weight:600; margin-top:8px; }
+.kpi .badge.pb { background:#7B1FA2; }
+.kpi .badge.ga { background:#0688E2; }
+.kpi .badge.mu { background:#FF9F1C; }
+.kpi .badge.sap { background:#06D6A0; }
+.card { background:#fff; padding:24px; border-radius:10px; box-shadow:0 1px 3px rgba(0,0,0,.06); margin-bottom:20px; }
+.card h3 { font-size:15px; font-weight:700; margin-bottom:16px; color:#0688E2; display:flex; align-items:center; gap:10px; }
+.card h3 .src { font-size:9px; padding:2px 8px; background:#E8EDF3; color:#7A8AA8; border-radius:8px; font-weight:600; }
+.card h3 .src.pb { background:#F3E5F5; color:#7B1FA2; }
+.card h3 .src.ga { background:#E3F2FD; color:#0688E2; }
+.card h3 .src.sap { background:#E0F7E9; color:#06D6A0; }
+.card h3 .src.mu { background:#FFF3E0; color:#FF9F1C; }
+table { width:100%; border-collapse:collapse; font-size:12px; }
+th { text-align:left; padding:10px 12px; background:#F5F7FA; color:#1A2B4C; font-weight:600; border-bottom:2px solid #E8EDF3; font-size:11px; text-transform:uppercase; letter-spacing:0.3px; }
+td { padding:10px 12px; border-bottom:1px solid #F0F3F7; }
+tr:hover td { background:#FAFBFD; }
+.pill { display:inline-block; padding:3px 8px; border-radius:10px; font-size:10px; font-weight:600; }
+.pill.green { background:#E0F7E9; color:#06A574; }
+.pill.red { background:#FFE5E5; color:#C92A2A; }
+.pill.orange { background:#FFF3E0; color:#E67E22; }
+.pill.blue { background:#E3F2FD; color:#0688E2; }
+.chart-box { height:300px; position:relative; }
+.row-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.note { background:#FFF8E1; border-left:4px solid #FFB300; padding:14px 18px; border-radius:6px; margin-bottom:20px; font-size:13px; }
+.note strong { color:#E65100; }
+.legend { display:flex; gap:14px; margin:12px 0; flex-wrap:wrap; font-size:11px; }
+.legend span { display:inline-flex; align-items:center; gap:6px; }
+.legend i { display:inline-block; width:10px; height:10px; border-radius:2px; }
+@media (max-width:768px) { .row-2 { grid-template-columns:1fr; } .header,.tabs,.content { padding-left:16px; padding-right:16px; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>ClinicalMarket B2B — Dashboard Operativo v5 · Canal RETAIL</h1>
+  <div class="sub">Marketplace farmacéutico · <strong>Solo canal retail</strong> (farmacias, droguerías, pet shops, veterinarias) · Excluye clínicas, hospitales, laboratorios e instituciones</div>
+  <div class="meta">
+    <span>📅 Generado: 13-Abril-2026</span>
+    <span>📊 Fuentes: SAP / Power BI · Publitas · GA4 · MailUp</span>
+    <span>🔄 Refresh: mensual (drop Excel)</span>
+    <span>🌐 GitHub: <a href="#" style="color:#fff;text-decoration:underline;">ecommerce-b2b</a></span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('resumen')">📊 Resumen</button>
+  <button class="tab" onclick="show('campanas')">🎯 Campañas Mes a Mes</button>
+  <button class="tab" onclick="show('clientes')">👥 Clientes (CDP)</button>
+  <button class="tab" onclick="show('vendedores')">💼 Vendedores</button>
+  <button class="tab" onclick="show('mailing')">✉️ Mailing</button>
+  <button class="tab" onclick="show('productos')">📦 Productos</button>
+  <button class="tab" onclick="show('digital')">🌐 Digital (GA4)</button>
+  <button class="tab" onclick="show('laboratorios')">🧪 Laboratorios</button>
+  <button class="tab" onclick="show('roadmap')">🗺️ Roadmap</button>
+</div>
+
+<div class="content">
+
+<!-- ============= RESUMEN ============= -->
+<div class="panel active" id="resumen">
+  <div class="note">
+    <strong>Filtro activo: solo canal RETAIL</strong> — farmacias, droguerías, pet shops, veterinarias. Se excluyen clínicas, hospitales, laboratorios, fundaciones e institutos para enfocar el análisis en el canal de reventa B2C.<br>
+    <strong>Filosofía v5:</strong> Mes a mes vemos campañas activas + envíos de mail + catálogos para decidir a qué clientes retail impactar y cómo armar la próxima campaña. Base del CDP retail de ClinicalMarket.
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="label">Venta retail 2025-2026 (SAP)</div><div class="val">$13.16 MM M</div><div class="sub">CLP · 468 clientes retail</div><span class="badge sap">SAP</span></div>
+    <div class="kpi alt"><div class="label">Top 71 retail (Pareto)</div><div class="val">80%</div><div class="sub">venta retail · 15.2% de la base retail</div><span class="badge sap">SAP</span></div>
+    <div class="kpi"><div class="label">Campañas últimos 6 meses</div><div class="val">76</div><div class="sub">Oct 2025 → Mar 2026</div><span class="badge pb">PB</span></div>
+    <div class="kpi"><div class="label">Ventas campañas Mar 2026</div><div class="val">$115,2M</div><div class="sub">8 campañas activas · +28% vs Feb</div><span class="badge pb">PB</span></div>
+    <div class="kpi warn"><div class="label">Productos sin rotación</div><div class="val">11.589</div><div class="sub">nunca vendidos en 12 meses</div><span class="badge pb">PB</span></div>
+    <div class="kpi alt"><div class="label">Productos abandonados</div><div class="val">2.275</div><div class="sub">comprados antes, ahora inactivos</div><span class="badge pb">PB</span></div>
+    <div class="kpi"><div class="label">Mailing Abril 2026</div><div class="val">23,26%</div><div class="sub">apertura · 3,98% clic · 3.100 envíos</div><span class="badge mu">MU</span></div>
+    <div class="kpi good"><div class="label">Sesiones email mensual</div><div class="val">2.859</div><div class="sub">MailUp + IDA + Gmail</div><span class="badge ga">GA4</span></div>
+  </div>
+
+  <div class="row-2">
+    <div class="card">
+      <h3>📈 Evolución mensual: Ventas campañas <span class="src pb">PB</span></h3>
+      <div class="chart-box"><canvas id="chartMonthly"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>📦 Evolución mensual: Unidades campañas <span class="src pb">PB</span></h3>
+      <div class="chart-box"><canvas id="chartUnits"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎯 Próximos pasos accionables</h3>
+    <table>
+      <thead><tr><th>#</th><th>Acción</th><th>Responsable</th><th>Plazo</th><th>Impacto esperado</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Activar campaña <strong>recuperación productos abandonados</strong> (2.275 SKUs) por mailing segmentado</td><td>Marketing + IT</td><td>Abr 2026</td><td>+5-8% venta cola larga</td></tr>
+        <tr><td>2</td><td><strong>Programa Pareto</strong> dedicado a Top 152 clientes (80% venta) con KAM asignado y trato preferencial</td><td>Comercial</td><td>May 2026</td><td>Retención +12%</td></tr>
+        <tr><td>3</td><td>Mapear productos Publitas → SKU SAP para medir conversion real (vistas catálogo → compra)</td><td>IT + Marketing</td><td>Abr-May 2026</td><td>Visibilidad funnel real</td></tr>
+        <tr><td>4</td><td>Auditar 11.589 SKUs sin rotación: depurar catálogo o relanzar con campaña</td><td>Compras + Marketing</td><td>Q2 2026</td><td>↓ 30% catálogo muerto</td></tr>
+        <tr><td>5</td><td>Migrar dashboard a <strong>GitHub Pages</strong> con refresh mensual automatizado</td><td>IT</td><td>Abr 2026</td><td>Acceso desde cualquier dispositivo</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============= CAMPAÑAS MES A MES ============= -->
+<div class="panel" id="campanas">
+  <div class="note">
+    <strong>Histórico campañas Publitas:</strong> 6 meses consecutivos. Cada mes hay 3 catálogos base (Farma, Consumo, Vet) + campañas tácticas estacionales.
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="label">Total campañas 6m</div><div class="val">76</div><div class="sub">Oct 2025 - Mar 2026</div></div>
+    <div class="kpi"><div class="label">Total ventas campañas 6m</div><div class="val">$603,7M</div><div class="sub">CLP · suma 6 meses</div></div>
+    <div class="kpi"><div class="label">Total unidades 6m</div><div class="val">315.747</div><div class="sub">unidades vendidas</div></div>
+    <div class="kpi alt"><div class="label">Ticket promedio campañas</div><div class="val">$1.911</div><div class="sub">CLP por unidad campaña</div></div>
+  </div>
+
+  <div class="card">
+    <h3>📅 Campañas mes a mes <span class="src pb">PB</span></h3>
+    <table>
+      <thead><tr><th>Mes</th><th>Campañas</th><th>Unidades</th><th>Ventas (CLP)</th><th>Δ unidades MoM</th><th>Top campaña del mes</th></tr></thead>
+      <tbody>
+<tr><td><strong>Oct 2025</strong></td><td>14</td><td>45,195</td><td>$73,595,930</td><td>-</td><td>SISTEMA MUSCULOSO ESQUELÉTICO ($17,419,271)</td></tr><tr><td><strong>Nov 2025</strong></td><td>13</td><td>27,463</td><td>$77,242,751</td><td>-39.2%</td><td>ALERGIA ($14,787,000)</td></tr><tr><td><strong>Dic 2025</strong></td><td>14</td><td>107,457</td><td>$115,377,348</td><td>+291.3%</td><td>PREPARATE PARA EL VERANO ($67,170,000)</td></tr><tr><td><strong>Ene 2026</strong></td><td>15</td><td>58,702</td><td>$132,346,726</td><td>-45.4%</td><td>VERANO SEGURO ($24,050,000)</td></tr><tr><td><strong>Feb 2026</strong></td><td>12</td><td>36,487</td><td>$89,953,225</td><td>-37.8%</td><td>PREPARATE PARA EL INVIERNO ($32,160,000)</td></tr><tr><td><strong>Mar 2026</strong></td><td>8</td><td>40,443</td><td>$115,192,107</td><td>+10.8%</td><td>PREP. INVIERNO ($58,600,000)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row-2">
+    <div class="card"><h3>📊 Top campañas por mes (ventas)</h3><div class="chart-box"><canvas id="chartTopCampaigns"></canvas></div></div>
+    <div class="card"><h3>📈 Comparativo unidades vs ventas</h3><div class="chart-box"><canvas id="chartUnitsVsSales"></canvas></div></div>
+  </div>
+
+  <div class="card">
+    <h3>🏆 Top 5 campañas históricas (suma 6 meses, ventas)</h3>
+    <table>
+      <thead><tr><th>#</th><th>Campaña</th><th>Mes pico</th><th>Ventas CLP (mes pico)</th><th>Tipo</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>PREPÁRATE PARA EL VERANO</td><td>Dic 2025</td><td>$67.170.000</td><td>Estacional</td></tr>
+        <tr><td>2</td><td>PREP. INVIERNO</td><td>Mar 2026</td><td>$58.600.000</td><td>Estacional</td></tr>
+        <tr><td>3</td><td>PREPÁRATE PARA EL INVIERNO</td><td>Feb 2026</td><td>$32.160.000</td><td>Estacional</td></tr>
+        <tr><td>4</td><td>INVIERNO VET</td><td>Mar 2026</td><td>$30.700.000</td><td>Estacional + Vertical Vet</td></tr>
+        <tr><td>5</td><td>VERANO SEGURO</td><td>Ene 2026</td><td>$24.050.000</td><td>Estacional</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:14px;font-size:12px;color:#7A8AA8;"><strong>Insight:</strong> Las campañas estacionales (Verano/Invierno) son el motor del catálogo. Anticipar 30 días el lanzamiento + cross-sell con productos cola larga podría aumentar ticket promedio.</p>
+  </div>
+</div>
+
+<!-- ============= CLIENTES (CDP) ============= -->
+<div class="panel" id="clientes">
+  <div class="note">
+    <strong>Base CDP RETAIL ClinicalMarket:</strong> 468 clientes retail · $13.16 MM M CLP histórico (2025-2026). Pareto retail: <strong>71 clientes (15.2%)</strong> generan el 80% del ingreso del canal retail.
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="label">Clientes retail activos</div><div class="val">468</div><div class="sub">Farmacias + Droguerías + Vet + Pet</div><span class="badge sap">SAP</span></div>
+    <div class="kpi alt"><div class="label">Top 1: FARMACIAS AHUMADA SpA</div><div class="val">$3.65MM M</div><div class="sub">27.7% del retail</div></div>
+    <div class="kpi"><div class="label">Top 10 retail</div><div class="val">$7.72MM M</div><div class="sub">59% del ingreso retail</div></div>
+    <div class="kpi good"><div class="label">Pareto retail (80%)</div><div class="val">71</div><div class="sub">15.2% de la base retail</div></div>
+  </div>
+
+  <div class="card">
+    <h3>🏆 Top 50 Clientes — Histórico 2025-2026 <span class="src sap">SAP</span></h3>
+    <div style="max-height:600px;overflow-y:auto;">
+    <table>
+      <thead><tr><th>#</th><th>Cliente</th><th>Vendedor</th><th>Venta E (CLP)</th><th>Venta Total (CLP)</th><th>% del total</th></tr></thead>
+      <tbody>
+<tr><td>1</td><td><strong>FARMACIAS AHUMADA SpA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM763788318</span></td><td>MARCELA PERINETTI</td><td>$0</td><td>$3,648,918,182</td><td><span class='pill green'>27.72%</span></td></tr><tr><td>2</td><td><strong>DROGUERIA BYF SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM766974139</span></td><td>CRISTIAN DIAZ</td><td>$0</td><td>$1,163,637,511</td><td><span class='pill green'>8.84%</span></td></tr><tr><td>3</td><td><strong>RAZAS PET SHOP SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM768419663</span></td><td>CAROL RAMIREZ</td><td>$10,139,318</td><td>$1,073,047,862</td><td><span class='pill green'>8.15%</span></td></tr><tr><td>4</td><td><strong>FARMACIAS MARGA MARGA LTDA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM767005822</span></td><td>GUSTAVO FERNANDEZ</td><td>$2,121,863</td><td>$672,114,039</td><td><span class='pill green'>5.11%</span></td></tr><tr><td>5</td><td><strong>SCM PHARMA SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM773375445</span></td><td>LEONARDO BARDI</td><td>$912,401</td><td>$448,071,939</td><td><span class='pill green'>3.40%</span></td></tr><tr><td>6</td><td><strong>FARMACIA ONCOCENTRO SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM767901186</span></td><td>CRISTIAN DIAZ</td><td>$0</td><td>$213,362,245</td><td><span class='pill green'>1.62%</span></td></tr><tr><td>7</td><td><strong>FARMACIA BIOCUBA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM770028434</span></td><td>LEONARDO HERNANDEZ</td><td>$1,832,871</td><td>$174,834,358</td><td><span class='pill green'>1.33%</span></td></tr><tr><td>8</td><td><strong>FARMACIAS LAS ROSAS S.A</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM763372154</span></td><td>LEONARDO BARDI</td><td>$48,368,364</td><td>$121,585,278</td><td><span class='pill blue'>0.92%</span></td></tr><tr><td>9</td><td><strong>MII FARMACIA S.P.A.</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM760788554</span></td><td>WALDO POZO</td><td>$0</td><td>$109,626,241</td><td><span class='pill blue'>0.83%</span></td></tr><tr><td>10</td><td><strong>DROGUERIA MAILET LTDA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM777725939</span></td><td>PAOLO CARTES</td><td>$0</td><td>$98,789,287</td><td><span class='pill blue'>0.75%</span></td></tr><tr><td>11</td><td><strong>DROGUERIA ACONCAGUA SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM769859330</span></td><td>LEONARDO HERNANDEZ</td><td>$0</td><td>$97,272,231</td><td><span class='pill blue'>0.74%</span></td></tr><tr><td>12</td><td><strong>FARMACIA JUAN PINO HERMOSILLA EMPRESA INDIVIDUAL D</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM76498918K</span></td><td>CESAR REYES</td><td>$0</td><td>$95,326,411</td><td><span class='pill blue'>0.72%</span></td></tr><tr><td>13</td><td><strong>COMERCIALIZADORA VETERINARIA CLUB ANIMAL S.P.A.</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM779537005</span></td><td>ANDREA RUIZ</td><td>$0</td><td>$88,478,142</td><td><span class='pill blue'>0.67%</span></td></tr><tr><td>14</td><td><strong>FARMACIAS CHILE S.P.A.</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM765339367</span></td><td>MARIA CORINA GARCIA</td><td>$61,387</td><td>$83,080,386</td><td><span class='pill blue'>0.63%</span></td></tr><tr><td>15</td><td><strong>FARMACIA VETS SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM770697182</span></td><td>ANDREA RUIZ</td><td>$0</td><td>$83,047,758</td><td><span class='pill blue'>0.63%</span></td></tr><tr><td>16</td><td><strong>FARMACIAS EUROPEAS SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM779090736</span></td><td>GUSTAVO FERNANDEZ</td><td>$43,934,368</td><td>$80,899,528</td><td><span class='pill blue'>0.61%</span></td></tr><tr><td>17</td><td><strong>FARMACIAS DEL SUR LIMITADA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM76473811K</span></td><td>LEONARDO GONZALEZ PARRA</td><td>$73,352,347</td><td>$75,159,474</td><td><span class='pill blue'>0.57%</span></td></tr><tr><td>18</td><td><strong>CLINCIA VETERINARIA SAN CRISTOBAL LTDA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM764469208</span></td><td>CAROL RAMIREZ</td><td>$51,480,270</td><td>$72,387,055</td><td><span class='pill blue'>0.55%</span></td></tr><tr><td>19</td><td><strong>FARMACIAS AILYN SAMARA ORYAN DABED EIRL</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM771478972</span></td><td>LEONARDO HERNANDEZ</td><td>$0</td><td>$71,277,751</td><td><span class='pill blue'>0.54%</span></td></tr><tr><td>20</td><td><strong>FARMACIA G Y M SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM770933536</span></td><td>SERGIO PICHUANTE</td><td>$60,668,749</td><td>$64,396,833</td><td><span class='pill blue'>0.49%</span></td></tr><tr><td>21</td><td><strong>PHARMA CLEVER SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM774983260</span></td><td>SERGIO PICHUANTE</td><td>$50,597,956</td><td>$63,063,108</td><td><span class='pill blue'>0.48%</span></td></tr><tr><td>22</td><td><strong>FARMACIAS COES SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM766017894</span></td><td>LEONARDO HERNANDEZ</td><td>$61,942,296</td><td>$62,813,423</td><td><span class='pill blue'>0.48%</span></td></tr><tr><td>23</td><td><strong>FARMACIA GALENICA SA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM789254400</span></td><td>LEONARDO BARDI</td><td>$0</td><td>$60,480,704</td><td><span class='pill blue'>0.46%</span></td></tr><tr><td>24</td><td><strong>FARMACIAS SIGFARMA SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM776719870</span></td><td>LEONARDO GONZALEZ PARRA</td><td>$57,302,029</td><td>$58,751,811</td><td><span class='pill blue'>0.45%</span></td></tr><tr><td>25</td><td><strong>FARMACIA OK SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM775754990</span></td><td>PAOLO CARTES</td><td>$0</td><td>$58,553,865</td><td><span class='pill blue'>0.44%</span></td></tr><tr><td>26</td><td><strong>FARMACIAS ROGERS MIGUEL PALMA CRUCES E.I.R.L.</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM76801809K</span></td><td>MARIA CORINA GARCIA</td><td>$41,685,534</td><td>$58,128,335</td><td><span class='pill blue'>0.44%</span></td></tr><tr><td>27</td><td><strong>FARMACIAS BIENESTAR SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM775403489</span></td><td>MARIA CORINA GARCIA</td><td>$4,904,787</td><td>$57,785,666</td><td><span class='pill blue'>0.44%</span></td></tr><tr><td>28</td><td><strong>FARMACIA EL QUIMICO SPA.</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM77005334K</span></td><td>PAOLO CARTES</td><td>$50,428,936</td><td>$53,309,936</td><td><span class='pill blue'>0.41%</span></td></tr><tr><td>29</td><td><strong>OSWALDO ROBERTO ÁLAVA MANGING FARMACIA E.I.R.L.</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM774591052</span></td><td>PAOLO CARTES</td><td>$0</td><td>$52,844,020</td><td><span class='pill blue'>0.40%</span></td></tr><tr><td>30</td><td><strong>FARMACIA GALVEZ</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM83506687</span></td><td>LEONARDO BARDI</td><td>$0</td><td>$52,726,398</td><td><span class='pill blue'>0.40%</span></td></tr><tr><td>31</td><td><strong>FARMACIA Y PERFUMERIA GACEMA LIMITADA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM765325579</span></td><td>LEONARDO HERNANDEZ</td><td>$48,118,641</td><td>$51,861,661</td><td><span class='pill blue'>0.39%</span></td></tr><tr><td>32</td><td><strong>FARMACIA ALVAREDIA SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM777974831</span></td><td>LEONARDO HERNANDEZ</td><td>$0</td><td>$44,601,442</td><td><span class='pill blue'>0.34%</span></td></tr><tr><td>33</td><td><strong>CENTRO INTEGRAL DE MASCOTAS SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM772631847</span></td><td>MARIA JOSE RAMIREZ</td><td>$0</td><td>$43,206,945</td><td><span class='pill blue'>0.33%</span></td></tr><tr><td>34</td><td><strong>FARMACIA Y PERFUMERIA VIVIANA DEL PILAR MALDONADO </strong><br><span style='color:#7A8AA8;font-size:10px;'>CM764048768</span></td><td>LEONARDO GONZALEZ PARRA</td><td>$43,044,516</td><td>$43,044,516</td><td><span class='pill blue'>0.33%</span></td></tr><tr><td>35</td><td><strong>FARMACIAS VITA LIMITADA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM763630684</span></td><td>CESAR REYES</td><td>$0</td><td>$42,388,721</td><td><span class='pill blue'>0.32%</span></td></tr><tr><td>36</td><td><strong>FARMACIAS ECOFARMAVIDA SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM778158337</span></td><td>MARIA CORINA GARCIA</td><td>$22,316,160</td><td>$42,242,616</td><td><span class='pill blue'>0.32%</span></td></tr><tr><td>37</td><td><strong>FARMACIA  Y PERFUMERIA FARMABELLA SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM773983151</span></td><td>LEONARDO HERNANDEZ</td><td>$40,885,670</td><td>$41,354,469</td><td><span class='pill blue'>0.31%</span></td></tr><tr><td>38</td><td><strong>FARMACIA  SETOP PHARMA LTDA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM774393307</span></td><td>CRISTIAN DIAZ</td><td>$0</td><td>$41,183,904</td><td><span class='pill blue'>0.31%</span></td></tr><tr><td>39</td><td><strong>SOCIEDAD DE FARMACIA GALENO SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM767245750</span></td><td>CESAR REYES</td><td>$0</td><td>$40,452,883</td><td><span class='pill blue'>0.31%</span></td></tr><tr><td>40</td><td><strong>SOCIEDAD DE FARMACIA GENERICA SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM77164788K</span></td><td>LEONARDO GONZALEZ PARRA</td><td>$0</td><td>$40,093,800</td><td><span class='pill blue'>0.30%</span></td></tr><tr><td>41</td><td><strong>FARMACIA DERMAEXPRES S.P.A.</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM763391426</span></td><td>LEONARDO HERNANDEZ</td><td>$37,412,806</td><td>$38,024,945</td><td><span class='pill blue'>0.29%</span></td></tr><tr><td>42</td><td><strong>FARMACIA CHILEVEN SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM773974462</span></td><td>PAOLO CARTES</td><td>$34,426,273</td><td>$37,705,420</td><td><span class='pill blue'>0.29%</span></td></tr><tr><td>43</td><td><strong>FARMACIA XIMENA ALEJANDRA MURILLO SALAZAR E.I.R.L.</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM766444911</span></td><td>LEONARDO HERNANDEZ</td><td>$291,596</td><td>$37,039,349</td><td><span class='pill blue'>0.28%</span></td></tr><tr><td>44</td><td><strong>COMERCIALIZADORA CENTRO MASCOTAS SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM778293331</span></td><td>ANDREA RUIZ</td><td>$0</td><td>$36,491,123</td><td><span class='pill blue'>0.28%</span></td></tr><tr><td>45</td><td><strong>SOCIEDAD COMERCIAL FARMACIA LA ESTRELLA LTDA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM771776736</span></td><td>LEONARDO GONZALEZ PARRA</td><td>$0</td><td>$36,469,664</td><td><span class='pill blue'>0.28%</span></td></tr><tr><td>46</td><td><strong>FARMACIA DIVINA SALUD SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM770137136</span></td><td>SERGIO PICHUANTE</td><td>$23,399,377</td><td>$36,416,439</td><td><span class='pill blue'>0.28%</span></td></tr><tr><td>47</td><td><strong>FARMACIA YUMBEL</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM62553790</span></td><td>LEONARDO GONZALEZ PARRA</td><td>$0</td><td>$36,071,095</td><td><span class='pill blue'>0.27%</span></td></tr><tr><td>48</td><td><strong>DROGUERIA MANUFHARM SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM772409710</span></td><td>JOSE PASCUAL</td><td>$60,300</td><td>$35,029,693</td><td><span class='pill blue'>0.27%</span></td></tr><tr><td>49</td><td><strong>VETERINARIA VETLINE LTDA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM771248101</span></td><td>CAROL RAMIREZ</td><td>$0</td><td>$34,634,593</td><td><span class='pill blue'>0.26%</span></td></tr><tr><td>50</td><td><strong>FARMACIA A Y M SPA</strong><br><span style='color:#7A8AA8;font-size:10px;'>CM776017043</span></td><td>LEONARDO HERNANDEZ</td><td>$25,581,223</td><td>$34,516,868</td><td><span class='pill blue'>0.26%</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="row-2">
+    <div class="card"><h3>📊 Concentración Pareto (Top 20)</h3><div class="chart-box"><canvas id="chartTopClientes"></canvas></div></div>
+    <div class="card">
+      <h3>🎯 Segmentación CDP retail (recomendación)</h3>
+      <table>
+        <thead><tr><th>Segmento</th><th>Criterio</th><th>Clientes</th><th>Acción sugerida</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill green">VIP retail</span></td><td>Top 10 retail</td><td>10</td><td>KAM dedicado (cadenas + droguerías top)</td></tr>
+          <tr><td><span class="pill blue">Pareto retail</span></td><td>Top 11-71 (80% venta)</td><td>61</td><td>Mailing segmentado, descuentos por volumen</td></tr>
+          <tr><td><span class="pill orange">Volumen medio</span></td><td>72-200</td><td>~129</td><td>Catálogos mensuales + automation</td></tr>
+          <tr><td><span class="pill orange">Cola larga retail</span></td><td>200+</td><td>~268</td><td>Self-service web, mailing genérico</td></tr>
+          <tr><td><span class="pill red">Inactivos</span></td><td>0 ventas 6m</td><td>por medir</td><td>Campaña reactivación</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============= VENDEDORES ============= -->
+<div class="panel" id="vendedores">
+  <div class="note">
+    Vendedores ordenados por venta total. Algunos manejan pocos clientes pero de altísimo volumen (KAM efectivos), otros tienen cartera amplia (canal volumen).
+  </div>
+  <div class="card">
+    <h3>💼 Performance por vendedor 2025-2026 <span class="src sap">SAP</span></h3>
+    <table>
+      <thead><tr><th>#</th><th>Vendedor</th><th>Venta total (CLP)</th><th>% del total</th><th># Clientes</th><th>Venta promedio/cliente</th><th>Tipo</th></tr></thead>
+      <tbody>
+<tr><td>1</td><td><strong>MARCELA PERINETTI</strong></td><td>$3,648,918,182</td><td>27.7%</td><td>1</td><td>$3,648,918,182</td><td><span class=pill green>KAM</span></td></tr><tr><td>2</td><td><strong>CRISTIAN DIAZ</strong></td><td>$1,434,361,233</td><td>10.9%</td><td>6</td><td>$239,060,206</td><td><span class=pill green>KAM</span></td></tr><tr><td>3</td><td><strong>CAROL RAMIREZ</strong></td><td>$1,387,430,352</td><td>10.5%</td><td>32</td><td>$43,357,198</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>4</td><td><strong>LEONARDO HERNANDEZ</strong></td><td>$1,186,548,800</td><td>9.0%</td><td>58</td><td>$20,457,738</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>5</td><td><strong>LEONARDO BARDI</strong></td><td>$1,058,171,632</td><td>8.0%</td><td>48</td><td>$22,045,242</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>6</td><td><strong>GUSTAVO FERNANDEZ</strong></td><td>$753,013,567</td><td>5.7%</td><td>2</td><td>$376,506,784</td><td><span class=pill green>KAM</span></td></tr><tr><td>7</td><td><strong>PAOLO CARTES</strong></td><td>$616,893,092</td><td>4.7%</td><td>47</td><td>$13,125,385</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>8</td><td><strong>MARIA CORINA GARCIA</strong></td><td>$600,163,460</td><td>4.6%</td><td>43</td><td>$13,957,290</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>9</td><td><strong>CESAR REYES</strong></td><td>$511,547,233</td><td>3.9%</td><td>32</td><td>$15,985,851</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>10</td><td><strong>LEONARDO GONZALEZ PARRA</strong></td><td>$505,152,824</td><td>3.8%</td><td>35</td><td>$14,432,938</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>11</td><td><strong>SERGIO PICHUANTE</strong></td><td>$337,678,828</td><td>2.6%</td><td>25</td><td>$13,507,153</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>12</td><td><strong>ANDREA RUIZ</strong></td><td>$315,412,524</td><td>2.4%</td><td>27</td><td>$11,681,945</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>13</td><td><strong>MARIA JOSE RAMIREZ</strong></td><td>$172,128,708</td><td>1.3%</td><td>18</td><td>$9,562,706</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>14</td><td><strong>FABIOLA CORNEJO</strong></td><td>$168,672,406</td><td>1.3%</td><td>29</td><td>$5,816,290</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>15</td><td><strong>CARLA SOTOMAYOR</strong></td><td>$140,728,652</td><td>1.1%</td><td>28</td><td>$5,026,023</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>16</td><td><strong>WALDO POZO</strong></td><td>$140,148,242</td><td>1.1%</td><td>5</td><td>$28,029,648</td><td><span class=pill green>KAM</span></td></tr><tr><td>17</td><td><strong>DANIELA ARANEDA</strong></td><td>$108,054,441</td><td>0.8%</td><td>23</td><td>$4,698,019</td><td><span class=pill blue>Mixto</span></td></tr><tr><td>18</td><td><strong>JOSE PASCUAL</strong></td><td>$38,393,112</td><td>0.3%</td><td>3</td><td>$12,797,704</td><td><span class=pill green>KAM</span></td></tr><tr><td>19</td><td><strong>ESTEBAN ZENTENO</strong></td><td>$12,996,397</td><td>0.1%</td><td>2</td><td>$6,498,198</td><td><span class=pill green>KAM</span></td></tr><tr><td>20</td><td><strong>SILVIA FLORES</strong></td><td>$12,827,450</td><td>0.1%</td><td>2</td><td>$6,413,725</td><td><span class=pill green>KAM</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h3>📊 Distribución venta por vendedor</h3>
+    <div class="chart-box" style="height:400px;"><canvas id="chartVendedores"></canvas></div>
+  </div>
+</div>
+
+<!-- ============= MAILING ============= -->
+<div class="panel" id="mailing">
+  <div class="note">
+    <strong>MailUp + Analytics:</strong> Cada catálogo enviado se mide por apertura (MailUp) y por sesiones/conversiones generadas (GA4). Mes a mes se llena este registro con cada envío.
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="label">Última campaña: Catálogos Abril</div><div class="val">3.100</div><div class="sub">enviados · 10-Abr-2026</div><span class="badge mu">MU</span></div>
+    <div class="kpi good"><div class="label">Tasa apertura</div><div class="val">23,26%</div><div class="sub">672 aperturas · benchmark farma 18-22%</div><span class="badge mu">MU</span></div>
+    <div class="kpi alt"><div class="label">Tasa clic (CTR)</div><div class="val">3,98%</div><div class="sub">115 clics · benchmark 2-4%</div><span class="badge mu">MU</span></div>
+    <div class="kpi"><div class="label">Sesiones desde email (mes)</div><div class="val">2.859</div><div class="sub">Mailup + IDA + Gmail referrals</div><span class="badge ga">GA4</span></div>
+  </div>
+
+  <div class="card">
+    <h3>📧 Histórico de envíos <span class="src mu">MailUp</span></h3>
+    <table>
+      <thead><tr><th>Fecha</th><th>Campaña</th><th>Enviados</th><th>Aperturas</th><th>% Apertura</th><th>Clics</th><th>% CTR</th></tr></thead>
+      <tbody>
+<tr><td>2026-04-10</td><td><strong>Catálogos Abril 2026</strong></td><td>3,100</td><td>672</td><td><span class='pill green'>23.26%</span></td><td>115</td><td><span class='pill green'>3.98%</span></td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:12px;font-size:12px;color:#7A8AA8;"><em>Nota: agrega cada envío mensual editando el JSON o el Excel mensual. La idea es ver tendencia de apertura/clic en el tiempo.</em></p>
+  </div>
+
+  <div class="row-2">
+    <div class="card">
+      <h3>📥 Origen sesiones desde email <span class="src ga">GA4</span></h3>
+      <table>
+        <thead><tr><th>Fuente</th><th>Sesiones (12m)</th></tr></thead>
+        <tbody>
+<tr><td>mailup / email</td><td>2,083</td></tr><tr><td>IDA Email / Email</td><td>589</td></tr><tr><td>mail.google.com / referral</td><td>187</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>🎯 Plan acción mailing</h3>
+      <ul style="font-size:13px;line-height:1.8;padding-left:20px;">
+        <li><strong>Segmentar listas:</strong> Top 152 (Pareto) recibe mail con descuentos premium; cola larga recibe catálogos genéricos.</li>
+        <li><strong>A/B asunto:</strong> probar 2 versiones por catálogo. Apertura objetivo: subir de 23% a 28%.</li>
+        <li><strong>Tracking SKU:</strong> agregar UTMs por producto destacado para medir conversion real desde mail.</li>
+        <li><strong>Reactivación:</strong> mail dedicado para 2.275 productos abandonados a clientes que los compraron antes.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============= PRODUCTOS ============= -->
+<div class="panel" id="productos">
+  <div class="note">
+    <strong>Estado del catálogo:</strong> 11.589 SKUs nunca rotados + 2.275 abandonados. Hay mucha cola larga sin movimiento que se puede activar con campañas dedicadas o depurar del catálogo.
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi warn"><div class="label">Productos sin rotación</div><div class="val">11.589</div><div class="sub">Cargados pero sin venta 12m</div><span class="badge pb">PB</span></div>
+    <div class="kpi alt"><div class="label">Productos abandonados</div><div class="val">2.275</div><div class="sub">Vendidos antes, sin venta 90d</div><span class="badge pb">PB</span></div>
+    <div class="kpi good"><div class="label">Productos vendidos Mar 2026</div><div class="val">266</div><div class="sub">de 357 en campañas (74,5%)</div></div>
+    <div class="kpi"><div class="label">Conversion catálogo→venta</div><div class="val">por medir</div><div class="sub">Pendiente mapeo Publitas-SKU</div></div>
+  </div>
+
+  <div class="card">
+    <h3>📦 Top productos vistos en Publitas <span class="src pb">PB</span></h3>
+    <p style="font-size:13px;color:#7A8AA8;margin-bottom:14px;">
+      <strong>⚠️ Pendiente:</strong> Mapeo de productos Publitas (eventos pbl_pageview, pbl_link_click) ↔ SKU SAP para calcular conversion real (vistas → carrito → compra) por producto. Por ahora se infiere desde GA4 itemViews, pero la métrica fina requiere el mapeo manual con archivo "a/C" (Acuerdo Comercial) que se incorporará progresivamente.
+    </p>
+    <table>
+      <thead><tr><th>SKU</th><th>Producto</th><th>Vistas (catálogo)</th><th>Add to cart</th><th>Compras</th><th>CR vista→carrito</th><th>CR vista→compra</th></tr></thead>
+      <tbody>
+        <tr><td colspan="7" style="text-align:center;color:#7A8AA8;padding:30px;"><em>Estructura lista. Rellenar cuando se complete el mapeo Publitas-SKU (Q2 2026).</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row-2">
+    <div class="card">
+      <h3>🚮 Productos a depurar (sin rotación)</h3>
+      <p style="font-size:13px;line-height:1.7;">
+        <strong>11.589 SKUs nunca vendidos en 12 meses.</strong><br><br>
+        <strong>Recomendación:</strong>
+        <ul style="padding-left:20px;margin-top:8px;">
+          <li>Auditar por categoría: si hay categorías enteras sin movimiento, retirarlas del catálogo.</li>
+          <li>Re-lanzar 200-300 SKUs en campaña dedicada "Descubre" con descuento especial.</li>
+          <li>Eliminar SKUs descontinuados del proveedor.</li>
+        </ul>
+      </p>
+    </div>
+    <div class="card">
+      <h3>♻️ Productos abandonados (recuperables)</h3>
+      <p style="font-size:13px;line-height:1.7;">
+        <strong>2.275 SKUs comprados antes pero inactivos hace 90+ días.</strong><br><br>
+        <strong>Recomendación:</strong>
+        <ul style="padding-left:20px;margin-top:8px;">
+          <li>Mailing recuperación a clientes que los compraron antes ("Vuelve a comprar X").</li>
+          <li>Remarketing automático en GA4 a sesiones que vieron sin convertir.</li>
+          <li>Cross-sell desde productos top (carrito).</li>
+        </ul>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ============= DIGITAL (GA4) ============= -->
+<div class="panel" id="digital">
+  <div class="note">
+    <strong>GA4 ya NO se usa para datos de venta</strong> (solo captura ~4% del ingreso real, B2B compra mayoritariamente offline). GA4 se usa para <strong>tráfico, comportamiento y bounce rate</strong> del catálogo digital.
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="label">Bounce rate general</div><div class="val">42.3%</div><div class="sub">Sitio · benchmark B2B 40-55%</div><span class="badge ga">GA4</span></div>
+    <div class="kpi alt"><div class="label">Tráfico catálogos</div><div class="val">en query</div><div class="sub">/catalogos vs /producto</div></div>
+    <div class="kpi"><div class="label">Sesiones email mes</div><div class="val">2.859</div><div class="sub">desde mailings</div></div>
+    <div class="kpi good"><div class="label">Eventos Publitas tracked</div><div class="val">3</div><div class="sub">pbl_pageview, pbl_navigation, pbl_link_click</div></div>
+  </div>
+
+  <div class="card">
+    <h3>📍 Bounce rate por landing <span class="src ga">GA4</span></h3>
+    <table>
+      <thead><tr><th>Path</th><th>Vistas</th><th>Bounce rate</th><th>Diagnóstico</th></tr></thead>
+      <tbody>
+        <tr><td colspan="4" style="text-align:center;color:#7A8AA8;padding:20px;"><em>Pendiente query mensual GA4 — estructura lista para rellenar.</em></td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:12px;font-size:12px;color:#7A8AA8;"><strong>Métricas a pullear cada mes:</strong> bounceRate, screenPageViews, sessions, engagedSessions por pagePath.</p>
+  </div>
+</div>
+
+<!-- ============= LABORATORIOS ============= -->
+<div class="panel" id="laboratorios">
+  <div class="note">
+    Los laboratorios (proveedores) son socios estratégicos. Datos de ventas por laboratorio salen de Power BI/SAP, mes a mes.
+  </div>
+  <div class="card">
+    <h3>🧪 Laboratorios destacados — campañas activas</h3>
+    <table>
+      <thead><tr><th>Laboratorio</th><th>Campañas mes</th><th>Δ MoM ventas</th><th>Comentario</th></tr></thead>
+      <tbody>
+        <tr><td><strong>MAVER</strong></td><td>1 (Mar 2026)</td><td><span class="pill green">+150%</span></td><td>Crecimiento explosivo en marzo</td></tr>
+        <tr><td><strong>GENOMMA</strong></td><td>1 (Mar 2026)</td><td><span class="pill green">+4775%</span></td><td>Lanzamiento muy exitoso</td></tr>
+        <tr><td><strong>ABBOTT</strong></td><td>1 (Oct 2025)</td><td><span class="pill blue">Estable</span></td><td>117 unidades · $1,9M</td></tr>
+        <tr><td><strong>ANASAC</strong></td><td>1 (Oct 2025)</td><td><span class="pill orange">Lanzamiento</span></td><td>16/20 productos rotaron</td></tr>
+        <tr><td><strong>OPKO</strong></td><td>1 (Oct 2025)</td><td><span class="pill orange">Lanzamiento</span></td><td>32 unidades · $230K</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============= ROADMAP ============= -->
+<div class="panel" id="roadmap">
+  <div class="note">
+    <strong>Workflow mensual definido:</strong> drop Excel → refresh dashboard → publicar en GitHub Pages → equipo accede desde cualquier lado.
+  </div>
+
+  <div class="card">
+    <h3>🗺️ Roadmap Q2-Q3 2026</h3>
+    <table>
+      <thead><tr><th>Sprint</th><th>Mes</th><th>Hito</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>S1</td><td>Abr 2026</td><td>Dashboard v5 productivo + GitHub Pages</td><td><span class="pill green">En curso</span></td></tr>
+        <tr><td>S2</td><td>Abr 2026</td><td>Workflow drop Excel mensual + script de refresh automático</td><td><span class="pill blue">Próximo</span></td></tr>
+        <tr><td>S3</td><td>May 2026</td><td>Mapeo Publitas-SKU para conversion real por producto</td><td><span class="pill blue">Planificado</span></td></tr>
+        <tr><td>S4</td><td>May 2026</td><td>Programa CDP: segmentación VIP/Pareto/Volumen + KAM asignados</td><td><span class="pill blue">Planificado</span></td></tr>
+        <tr><td>S5</td><td>Jun 2026</td><td>Mailings segmentados por segmento CDP (Klaviyo o MailUp avanzado)</td><td><span class="pill orange">Backlog</span></td></tr>
+        <tr><td>S6</td><td>Jul 2026</td><td>Auditoría 11.589 SKUs sin rotación + plan depuración/relanzamiento</td><td><span class="pill orange">Backlog</span></td></tr>
+        <tr><td>S7</td><td>Ago 2026</td><td>Migración a Cloudflare R2 + n8n para automation completa</td><td><span class="pill orange">Backlog</span></td></tr>
+        <tr><td>S8</td><td>Sep 2026</td><td>Dashboard predictivo con ML (proyección venta + churn)</td><td><span class="pill orange">Backlog</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row-2">
+    <div class="card">
+      <h3>🔄 Workflow mensual</h3>
+      <ol style="padding-left:20px;line-height:2;font-size:13px;">
+        <li>Día 1 del mes: descargar Power BI ventas + reporte INFORME PDF</li>
+        <li>Drop archivos en carpeta <code>data/</code> del repo</li>
+        <li>Push a GitHub → GitHub Action regenera dashboard</li>
+        <li>GitHub Pages publica nueva versión automáticamente</li>
+        <li>Compartir link con equipo para análisis mensual</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>📦 Repo: <code>ecommerce-b2b</code></h3>
+      <ul style="font-size:13px;line-height:1.9;padding-left:20px;">
+        <li><code>/data/</code> — Excel y PDFs mensuales (drop folder)</li>
+        <li><code>/src/build_dashboard.py</code> — Script generador</li>
+        <li><code>/docs/index.html</code> — Dashboard publicado (Pages)</li>
+        <li><code>/.github/workflows/refresh.yml</code> — Auto-rebuild</li>
+        <li><code>README.md</code> — Instrucciones drop mensual</li>
+      </ul>
+      <p style="margin-top:12px;font-size:12px;color:#7A8AA8;">URL pública: <code>https://[tu-usuario].github.io/ecommerce-b2b/</code></p>
+    </div>
+  </div>
+</div>
+
+</div> <!-- /content -->
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+const monthLabels = ["Oct 2025", "Nov 2025", "Dic 2025", "Ene 2026", "Feb 2026", "Mar 2026"];
+const monthSales = [73.59593, 77.242751, 115.377348, 132.346726, 89.953225, 115.192107];
+const monthUnits = [45195, 27463, 107457, 58702, 36487, 40443];
+
+new Chart(document.getElementById('chartMonthly'), {
+  type:'line',
+  data:{labels:monthLabels, datasets:[{label:'Ventas (M CLP)', data:monthSales, borderColor:'#0DA7EE', backgroundColor:'rgba(13,167,238,.15)', tension:0.3, fill:true, borderWidth:3}]},
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}}
+});
+
+new Chart(document.getElementById('chartUnits'), {
+  type:'bar',
+  data:{labels:monthLabels, datasets:[{label:'Unidades', data:monthUnits, backgroundColor:'#0688E2'}]},
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}}
+});
+
+new Chart(document.getElementById('chartTopCampaigns'), {
+  type:'bar',
+  data:{labels:monthLabels, datasets:[{label:'Top campaña ($M)', data:[17.419271, 14.787, 67.17, 24.05, 32.16, 58.6], backgroundColor:'#FF9F1C'}]},
+  options:{responsive:true, maintainAspectRatio:false}
+});
+
+new Chart(document.getElementById('chartUnitsVsSales'), {
+  type:'line',
+  data:{labels:monthLabels, datasets:[
+    {label:'Unidades', data:monthUnits, borderColor:'#06D6A0', backgroundColor:'rgba(6,214,160,.1)', yAxisID:'y'},
+    {label:'Ventas (M)', data:monthSales, borderColor:'#0DA7EE', backgroundColor:'rgba(13,167,238,.1)', yAxisID:'y1'}
+  ]},
+  options:{responsive:true, maintainAspectRatio:false, scales:{y:{position:'left'}, y1:{position:'right', grid:{display:false}}}}
+});
+
+const topClientes = [{"name": "FARMACIAS AHUMADA SpA", "val": 3648.918182}, {"name": "DROGUERIA BYF SPA", "val": 1163.637511}, {"name": "RAZAS PET SHOP SPA", "val": 1073.047862}, {"name": "FARMACIAS MARGA MARGA LTD", "val": 672.114039}, {"name": "SCM PHARMA SPA", "val": 448.071939}, {"name": "FARMACIA ONCOCENTRO SPA", "val": 213.362245}, {"name": "FARMACIA BIOCUBA", "val": 174.834358}, {"name": "FARMACIAS LAS ROSAS S.A", "val": 121.585278}, {"name": "MII FARMACIA S.P.A.", "val": 109.626241}, {"name": "DROGUERIA MAILET LTDA", "val": 98.789287}, {"name": "DROGUERIA ACONCAGUA SPA", "val": 97.272231}, {"name": "FARMACIA JUAN PINO HERMOS", "val": 95.326411}, {"name": "COMERCIALIZADORA VETERINA", "val": 88.478142}, {"name": "FARMACIAS CHILE S.P.A.", "val": 83.080386}, {"name": "FARMACIA VETS SPA", "val": 83.047758}, {"name": "FARMACIAS EUROPEAS SPA", "val": 80.899528}, {"name": "FARMACIAS DEL SUR LIMITAD", "val": 75.159474}, {"name": "CLINCIA VETERINARIA SAN C", "val": 72.387055}, {"name": "FARMACIAS AILYN SAMARA OR", "val": 71.277751}, {"name": "FARMACIA G Y M SPA", "val": 64.396833}];
+new Chart(document.getElementById('chartTopClientes'), {
+  type:'bar',
+  data:{labels:topClientes.map(c=>c.name), datasets:[{label:'Venta (M CLP)', data:topClientes.map(c=>c.val), backgroundColor:'#0DA7EE'}]},
+  options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}}
+});
+
+const vendData = [{"name": "MARCELA PERINETTI", "val": 3648.918182}, {"name": "CRISTIAN DIAZ", "val": 1434.361233}, {"name": "CAROL RAMIREZ", "val": 1387.430352}, {"name": "LEONARDO HERNANDEZ", "val": 1186.5488}, {"name": "LEONARDO BARDI", "val": 1058.171632}, {"name": "GUSTAVO FERNANDEZ", "val": 753.013567}, {"name": "PAOLO CARTES", "val": 616.893092}, {"name": "MARIA CORINA GARCIA", "val": 600.16346}, {"name": "CESAR REYES", "val": 511.547233}, {"name": "LEONARDO GONZALEZ PARRA", "val": 505.152824}, {"name": "SERGIO PICHUANTE", "val": 337.678828}, {"name": "ANDREA RUIZ", "val": 315.412524}, {"name": "MARIA JOSE RAMIREZ", "val": 172.128708}, {"name": "FABIOLA CORNEJO", "val": 168.672406}, {"name": "CARLA SOTOMAYOR", "val": 140.728652}];
+new Chart(document.getElementById('chartVendedores'), {
+  type:'bar',
+  data:{labels:vendData.map(v=>v.name), datasets:[{label:'Venta total (M CLP)', data:vendData.map(v=>v.val), backgroundColor:['#0688E2','#0DA7EE','#FF9F1C','#06D6A0','#7B1FA2','#0688E2','#0DA7EE','#FF9F1C','#06D6A0','#7B1FA2','#0688E2','#0DA7EE','#FF9F1C','#06D6A0','#7B1FA2']}]},
+  options:{indexAxis:'y', responsive:true, maintainAspectRatio:false}
+});
+</script>
+
+</body>
+</html>
