@@ -1,1 +1,460 @@
-{"total_clientes": 468, "venta_total": 13161199379.0, "top_50": [{"vendedor": "MARCELA PERINETTI", "cardcode": "CM763788318", "cardname": "FARMACIAS AHUMADA SpA", "venta_e": 0.0, "venta_total": 3648918182.0}, {"vendedor": "CRISTIAN DIAZ", "cardcode": "CM766974139", "cardname": "DROGUERIA BYF SPA", "venta_e": 0.0, "venta_total": 1163637511.0}, {"vendedor": "CAROL RAMIREZ", "cardcode": "CM768419663", "cardname": "RAZAS PET SHOP SPA", "venta_e": 10139318.0, "venta_total": 1073047862.0}, {"vendedor": "GUSTAVO FERNANDEZ", "cardcode": "CM767005822", "cardname": "FARMACIAS MARGA MARGA LTDA", "venta_e": 2121863.0, "venta_total": 672114039.0}, {"vendedor": "LEONARDO BARDI", "cardcode": "CM773375445", "cardname": "SCM PHARMA SPA", "venta_e": 912401.0, "venta_total": 448071939.0}, {"vendedor": "CRISTIAN DIAZ", "cardcode": "CM767901186", "cardname": "FARMACIA ONCOCENTRO SPA", "venta_e": 0.0, "venta_total": 213362245.0}, {"vendedor": "LEONARDO HERNANDEZ", "cardcode": "CM770028434", "cardname": "FARMACIA BIOCUBA", "venta_e": 1832871.0, "venta_total": 174834358.0}, {"vendedor": "LEONARDO BARDI", "cardcode": "CM763372154", "cardname": "FARMACIAS LAS ROSAS S.A", "venta_e": 48368364.0, "venta_total": 121585278.0}, {"vendedor": "WALDO POZO", "cardcode": "CM760788554", "cardname": "MII FARMACIA S.P.A.", "venta_e": 0.0, "venta_total": 109626241.0}, {"vendedor": "PAOLO CARTES", "cardcode": "CM777725939", "cardname": "DROGUERIA MAILET LTDA", "venta_e": 0.0, "venta_total": 98789287.0}, {"vendedor": "LEONARDO HERNANDEZ", "cardcode": "CM769859330", "cardname": "DROGUERIA ACONCAGUA SPA", "venta_e": 0.0, "venta_total": 97272231.0}, {"vendedor": "CESAR REYES", "cardcode": "CM76498918K", "cardname": "FARMACIA JUAN PINO HERMOSILLA EMPRESA INDIVIDUAL DE RESPONSABILIDAD LIMITADA", "venta_e": 0.0, "venta_total": 95326411.0}, {"vendedor": "ANDREA RUIZ", "cardcode": "CM779537005", "cardname": "COMERCIALIZADORA VETERINARIA CLUB ANIMAL S.P.A.", "venta_e": 0.0, "venta_total": 88478142.0}, {"vendedor": "MARIA CORINA GARCIA", "cardcode": "CM765339367", "cardname": "FARMACIAS CHILE S.P.A.", "venta_e": 61387.0, "venta_total": 83080386.0}, {"vendedor": "ANDREA RUIZ", "cardcode": "CM770697182", "cardname": "FARMACIA VETS SPA", "venta_e": 0.0, "venta_total": 83047758.0}, {"vendedor": "GUSTAVO FERNANDEZ", "cardcode": "CM779090736", "cardname": "FARMACIAS EUROPEAS SPA", "venta_e": 43934368.0, "venta_total": 80899528.0}, {"vendedor": "LEONARDO GONZALEZ PARRA", "cardcode": "CM76473811K", "cardname": "FARMACIAS DEL SUR LIMITADA", "venta_e": 73352347.0, "venta_total": 75159474.0}, {"vendedor": "CAROL RAMIREZ", "cardcode": "CM764469208", "cardname": "CLINCIA VETERINARIA SAN CRISTOBAL LTDA", "venta_e": 51480270.0, "venta_total": 72387055.0}, {"vendedor": "LEONARDO HERNANDEZ", "cardcode": "CM771478972", "cardname": "FARMACIAS AILYN SAMARA ORYAN DABED EIRL", "venta_e": 0.0, "venta_total": 71277751.0}, {"vendedor": "SERGIO PICHUANTE", "cardcode": "CM770933536", "cardname": "FARMACIA G Y M SPA", "venta_e": 60668749.0, "venta_total": 64396833.0}, {"vendedor": "SERGIO PICHUANTE", "cardcode": "CM774983260", "cardname": "PHARMA CLEVER SPA", "venta_e": 50597956.0, "venta_total": 63063108.0}, {"vendedor": "LEONARDO HERNANDEZ", "cardcode": "CM766017894", "cardname": "FARMACIAS COES SPA", "venta_e": 61942296.0, "venta_total": 62813423.0}, {"vendedor": "LEONARDO BARDI", "cardcode": "CM789254400", "cardname": "FARMACIA GALENICA SA", "venta_e": 0.0, "venta_total": 60480704.0}, {"vendedor": "LEONARDO GONZALEZ PARRA", "cardcode": "CM776719870", "cardname": "FARMACIAS SIGFARMA SPA", "venta_e": 57302029.0, "venta_total": 58751811.0}, {"vendedor": "PAOLO CARTES", "cardcode": "CM775754990", "cardname": "FARMACIA OK SPA", "venta_e": 0.0, "venta_total": 58553865.0}, {"vendedor": "MARIA CORINA GARCIA", "cardcode": "CM76801809K", "cardname": "FARMACIAS ROGERS MIGUEL PALMA CRUCES E.I.R.L.", "venta_e": 41685534.0, "venta_total": 58128335.0}, {"vendedor": "MARIA CORINA GARCIA", "cardcode": "CM775403489", "cardname": "FARMACIAS BIENESTAR SPA", "venta_e": 4904787.0, "venta_total": 57785666.0}, {"vendedor": "PAOLO CARTES", "cardcode": "CM77005334K", "cardname": "FARMACIA EL QUIMICO SPA.", "venta_e": 50428936.0, "venta_total": 53309936.0}, {"vendedor": "PAOLO CARTES", "cardcode": "CM774591052", "cardname": "OSWALDO ROBERTO \u00c1LAVA MANGING FARMACIA E.I.R.L.", "venta_e": 0.0, "venta_total": 52844020.0}, {"vendedor": "LEONARDO BARDI", "cardcode": "CM83506687", "cardname": "FARMACIA GALVEZ", "venta_e": 0.0, "venta_total": 52726398.0}, {"vendedor": "LEONARDO HERNANDEZ", "cardcode": "CM765325579", "cardname": "FARMACIA Y PERFUMERIA GACEMA LIMITADA", "venta_e": 48118641.0, "venta_total": 51861661.0}, {"vendedor": "LEONARDO HERNANDEZ", "cardcode": "CM777974831", "cardname": "FARMACIA ALVAREDIA SPA", "venta_e": 0.0, "venta_total": 44601442.0}, {"vendedor": "MARIA JOSE RAMIREZ", "cardcode": "CM772631847", "cardname": "CENTRO INTEGRAL DE MASCOTAS SPA", "venta_e": 0.0, "venta_total": 43206945.0}, {"vendedor": "LEONARDO GONZALEZ PARRA", "cardcode": "CM764048768", "cardname": "FARMACIA Y PERFUMERIA VIVIANA DEL PILAR MALDONADO EIRL", "venta_e": 43044516.0, "venta_total": 43044516.0}, {"vendedor": "CESAR REYES", "cardcode": "CM763630684", "cardname": "FARMACIAS VITA LIMITADA", "venta_e": 0.0, "venta_total": 42388721.0}, {"vendedor": "MARIA CORINA GARCIA", "cardcode": "CM778158337", "cardname": "FARMACIAS ECOFARMAVIDA SPA", "venta_e": 22316160.0, "venta_total": 42242616.0}, {"vendedor": "LEONARDO HERNANDEZ", "cardcode": "CM773983151", "cardname": "FARMACIA  Y PERFUMERIA FARMABELLA SPA", "venta_e": 40885670.0, "venta_total": 41354469.0}, {"vendedor": "CRISTIAN DIAZ", "cardcode": "CM774393307", "cardname": "FARMACIA  SETOP PHARMA LTDA", "venta_e": 0.0, "venta_total": 41183904.0}, {"vendedor": "CESAR REYES", "cardcode": "CM767245750", "cardname": "SOCIEDAD DE FARMACIA GALENO SPA", "venta_e": 0.0, "venta_total": 40452883.0}, {"vendedor": "LEONARDO GONZALEZ PARRA", "cardcode": "CM77164788K", "cardname": "SOCIEDAD DE FARMACIA GENERICA SPA", "venta_e": 0.0, "venta_total": 40093800.0}, {"vendedor": "LEONARDO HERNANDEZ", "cardcode": "CM763391426", "cardname": "FARMACIA DERMAEXPRES S.P.A.", "venta_e": 37412806.0, "venta_total": 38024945.0}, {"vendedor": "PAOLO CARTES", "cardcode": "CM773974462", "cardname": "FARMACIA CHILEVEN SPA", "venta_e": 34426273.0, "venta_total": 37705420.0}, {"vendedor": "LEONARDO HERNANDEZ", "cardcode": "CM766444911", "cardname": "FARMACIA XIMENA ALEJANDRA MURILLO SALAZAR E.I.R.L.", "venta_e": 291596.0, "venta_total": 37039349.0}, {"vendedor": "ANDREA RUIZ", "cardcode": "CM778293331", "cardname": "COMERCIALIZADORA CENTRO MASCOTAS SPA", "venta_e": 0.0, "venta_total": 36491123.0}, {"vendedor": "LEONARDO GONZALEZ PARRA", "cardcode": "CM771776736", "cardname": "SOCIEDAD COMERCIAL FARMACIA LA ESTRELLA LTDA", "venta_e": 0.0, "venta_total": 36469664.0}, {"vendedor": "SERGIO PICHUANTE", "cardcode": "CM770137136", "cardname": "FARMACIA DIVINA SALUD SPA", "venta_e": 23399377.0, "venta_total": 36416439.0}, {"vendedor": "LEONARDO GONZALEZ PARRA", "cardcode": "CM62553790", "cardname": "FARMACIA YUMBEL", "venta_e": 0.0, "venta_total": 36071095.0}, {"vendedor": "JOSE PASCUAL", "cardcode": "CM772409710", "cardname": "DROGUERIA MANUFHARM SPA", "venta_e": 60300.0, "venta_total": 35029693.0}, {"vendedor": "CAROL RAMIREZ", "cardcode": "CM771248101", "cardname": "VETERINARIA VETLINE LTDA", "venta_e": 0.0, "venta_total": 34634593.0}, {"vendedor": "LEONARDO HERNANDEZ", "cardcode": "CM776017043", "cardname": "FARMACIA A Y M SPA", "venta_e": 25581223.0, "venta_total": 34516868.0}], "pareto_n80": 71, "pareto_pct": 15.2, "por_vendedor": [{"vendedor": "MARCELA PERINETTI", "venta": 3648918182.0, "clientes": 1}, {"vendedor": "CRISTIAN DIAZ", "venta": 1434361233.0, "clientes": 6}, {"vendedor": "CAROL RAMIREZ", "venta": 1387430352.0, "clientes": 32}, {"vendedor": "LEONARDO HERNANDEZ", "venta": 1186548800.0, "clientes": 58}, {"vendedor": "LEONARDO BARDI", "venta": 1058171632.0, "clientes": 48}, {"vendedor": "GUSTAVO FERNANDEZ", "venta": 753013567.0, "clientes": 2}, {"vendedor": "PAOLO CARTES", "venta": 616893092.0, "clientes": 47}, {"vendedor": "MARIA CORINA GARCIA", "venta": 600163460.0, "clientes": 43}, {"vendedor": "CESAR REYES", "venta": 511547233.0, "clientes": 32}, {"vendedor": "LEONARDO GONZALEZ PARRA", "venta": 505152824.0, "clientes": 35}, {"vendedor": "SERGIO PICHUANTE", "venta": 337678828.0, "clientes": 25}, {"vendedor": "ANDREA RUIZ", "venta": 315412524.0, "clientes": 27}, {"vendedor": "MARIA JOSE RAMIREZ", "venta": 172128708.0, "clientes": 18}, {"vendedor": "FABIOLA CORNEJO", "venta": 168672406.0, "clientes": 29}, {"vendedor": "CARLA SOTOMAYOR", "venta": 140728652.0, "clientes": 28}, {"vendedor": "WALDO POZO", "venta": 140148242.0, "clientes": 5}, {"vendedor": "DANIELA ARANEDA", "venta": 108054441.0, "clientes": 23}, {"vendedor": "JOSE PASCUAL", "venta": 38393112.0, "clientes": 3}, {"vendedor": "ESTEBAN ZENTENO", "venta": 12996397.0, "clientes": 2}, {"vendedor": "SILVIA FLORES", "venta": 12827450.0, "clientes": 2}, {"vendedor": "MARIA JOSE ROJAS", "venta": 9125551.0, "clientes": 1}, {"vendedor": "MARCELA MOLINA", "venta": 2832693.0, "clientes": 1}], "filtro": "RETAIL: Farmacias + Veterinarias + Pet Shops + Droguer\u00edas (excluye cl\u00ednicas, hospitales, laboratorios, fundaciones, institutos)"}
+{
+  "total_clientes": 672,
+  "total_venta": 7229342905,
+  "pareto_n80": 187,
+  "pareto_pct": 27.8,
+  "top50": [
+    {
+      "vendedor": "LEONARDO BARDI",
+      "cardcode": "CM771431380",
+      "nombre": "MEDICAL KIT SPA",
+      "venta_ecommerce": 200710212,
+      "venta_total": 200710212
+    },
+    {
+      "vendedor": "MARIA CORINA GARCIA",
+      "cardcode": "CM769953302",
+      "nombre": "FARMACEUTICA CHILOÉ LIMITADA",
+      "venta_ecommerce": 187848462,
+      "venta_total": 187848462
+    },
+    {
+      "vendedor": "LEONARDO GONZALEZ PARRA",
+      "cardcode": "CM773902100",
+      "nombre": "SOCIEDAD COMERCIALIZADORA VERONICA LTDA.",
+      "venta_ecommerce": 168156836,
+      "venta_total": 168156836
+    },
+    {
+      "vendedor": "LEONARDO HERNANDEZ",
+      "cardcode": "CM124059216",
+      "nombre": "SUSAN CATHERINE BASTIAS ALVAREZ",
+      "venta_ecommerce": 164307185,
+      "venta_total": 164307185
+    },
+    {
+      "vendedor": "LEONARDO BARDI",
+      "cardcode": "CM773677417",
+      "nombre": "COMERCIAL BARTSCH Y CIA LTDA",
+      "venta_ecommerce": 128927323,
+      "venta_total": 128927323
+    },
+    {
+      "vendedor": "PAOLO CARTES",
+      "cardcode": "CM760319589",
+      "nombre": "FARMACEUTICA ALVAREZ HERMANOS LTDA.",
+      "venta_ecommerce": 107896912,
+      "venta_total": 107896912
+    },
+    {
+      "vendedor": "LEONARDO BARDI",
+      "cardcode": "CM760181188",
+      "nombre": "SOCIEDAD CLINICA COMERCIAL S.A.",
+      "venta_ecommerce": 104324731,
+      "venta_total": 104324731
+    },
+    {
+      "vendedor": "MARIA CORINA GARCIA",
+      "cardcode": "CM761915142",
+      "nombre": "INVERSIONES SILVIA VASQUEZ GONZALEZ E.I.R.L.",
+      "venta_ecommerce": 102771971,
+      "venta_total": 102771971
+    },
+    {
+      "vendedor": "MARIA CORINA GARCIA",
+      "cardcode": "CM768224552",
+      "nombre": "ICSFARMA SpA",
+      "venta_ecommerce": 94511226,
+      "venta_total": 94511226
+    },
+    {
+      "vendedor": "LEONARDO BARDI",
+      "cardcode": "CM768013187",
+      "nombre": "COMERCIALIZADORA Y DISTRIBUIDORA ARAUCOMED LTDA",
+      "venta_ecommerce": 93774033,
+      "venta_total": 93774033
+    },
+    {
+      "vendedor": "LEONARDO HERNANDEZ",
+      "cardcode": "CM767221673",
+      "nombre": "SOCIEDAD FARMACEUTICA SAN LUIS LTDA.",
+      "venta_ecommerce": 90212458,
+      "venta_total": 90212458
+    },
+    {
+      "vendedor": "LEONARDO GONZALEZ PARRA",
+      "cardcode": "CM763836746",
+      "nombre": "SOCIEDAD FARMACEUTICA CRUCES SALDANO LIMITADA",
+      "venta_ecommerce": 75172690,
+      "venta_total": 75172690
+    },
+    {
+      "vendedor": "LEONARDO GONZALEZ PARRA",
+      "cardcode": "CM76473811K",
+      "nombre": "FARMACIAS DEL SUR LIMITADA",
+      "venta_ecommerce": 73410387,
+      "venta_total": 73410387
+    },
+    {
+      "vendedor": "CESAR REYES",
+      "cardcode": "CM077283781",
+      "nombre": "HERNAN RODRIGO MUÑOZ FUENTES",
+      "venta_ecommerce": 67954491,
+      "venta_total": 67954491
+    },
+    {
+      "vendedor": "CESAR REYES",
+      "cardcode": "CM771729622",
+      "nombre": "FARMAVID SPA",
+      "venta_ecommerce": 65349089,
+      "venta_total": 65349089
+    },
+    {
+      "vendedor": "GUSTAVO FERNANDEZ",
+      "cardcode": "CM776875821",
+      "nombre": "FRANQUICIAS SANFEL SPA",
+      "venta_ecommerce": 63575950,
+      "venta_total": 63575950
+    },
+    {
+      "vendedor": "LEONARDO BARDI",
+      "cardcode": "CM833373005",
+      "nombre": "CARLOS SALINAS Y CIA LIMITADA",
+      "venta_ecommerce": 62524053,
+      "venta_total": 62524053
+    },
+    {
+      "vendedor": "LEONARDO HERNANDEZ",
+      "cardcode": "CM766017894",
+      "nombre": "FARMACIAS COES SPA",
+      "venta_ecommerce": 61942296,
+      "venta_total": 61942296
+    },
+    {
+      "vendedor": "LEONARDO GONZALEZ PARRA",
+      "cardcode": "CM767874677",
+      "nombre": "SOCIEDAD ELIXIR LIMITADA",
+      "venta_ecommerce": 60964053,
+      "venta_total": 60964053
+    },
+    {
+      "vendedor": "SERGIO PICHUANTE",
+      "cardcode": "CM770933536",
+      "nombre": "FARMACIA G Y M SPA",
+      "venta_ecommerce": 60727625,
+      "venta_total": 60727625
+    },
+    {
+      "vendedor": "LEONARDO GONZALEZ PARRA",
+      "cardcode": "CM776719870",
+      "nombre": "FARMACIAS SIGFARMA SPA",
+      "venta_ecommerce": 57302029,
+      "venta_total": 57302029
+    },
+    {
+      "vendedor": "MARIA CORINA GARCIA",
+      "cardcode": "CM770325595",
+      "nombre": "FARMALOOP SPA",
+      "venta_ecommerce": 55642613,
+      "venta_total": 55642613
+    },
+    {
+      "vendedor": "LEONARDO HERNANDEZ",
+      "cardcode": "CM769089314",
+      "nombre": "SOCIEDAD DIAZ Y SALAS LIMITADA",
+      "venta_ecommerce": 54496984,
+      "venta_total": 54496984
+    },
+    {
+      "vendedor": "CESAR REYES",
+      "cardcode": "CM770597420",
+      "nombre": "INVERSIONES M Y M LIMITADA",
+      "venta_ecommerce": 52383864,
+      "venta_total": 52383864
+    },
+    {
+      "vendedor": "CAROL RAMIREZ",
+      "cardcode": "CM764469208",
+      "nombre": "CLINCIA VETERINARIA SAN CRISTOBAL LTDA",
+      "venta_ecommerce": 51480270,
+      "venta_total": 51480270
+    },
+    {
+      "vendedor": "SERGIO PICHUANTE",
+      "cardcode": "CM774983260",
+      "nombre": "PHARMA CLEVER SPA",
+      "venta_ecommerce": 50640648,
+      "venta_total": 50640648
+    },
+    {
+      "vendedor": "PAOLO CARTES",
+      "cardcode": "CM77005334K",
+      "nombre": "FARMACIA EL QUIMICO SPA.",
+      "venta_ecommerce": 50428936,
+      "venta_total": 50428936
+    },
+    {
+      "vendedor": "LEONARDO BARDI",
+      "cardcode": "CM776224812",
+      "nombre": "DIALY SPA",
+      "venta_ecommerce": 48595552,
+      "venta_total": 48595552
+    },
+    {
+      "vendedor": "LEONARDO BARDI",
+      "cardcode": "CM763372154",
+      "nombre": "FARMACIAS LAS ROSAS S.A",
+      "venta_ecommerce": 48403957,
+      "venta_total": 48403957
+    },
+    {
+      "vendedor": "LEONARDO HERNANDEZ",
+      "cardcode": "CM765325579",
+      "nombre": "FARMACIA Y PERFUMERIA GACEMA LIMITADA",
+      "venta_ecommerce": 48118641,
+      "venta_total": 48118641
+    },
+    {
+      "vendedor": "LEONARDO HERNANDEZ",
+      "cardcode": "CM81550891",
+      "nombre": "ELBA HORTENSIA MULET MARTINEZ",
+      "venta_ecommerce": 46424249,
+      "venta_total": 46424249
+    },
+    {
+      "vendedor": "GUSTAVO FERNANDEZ",
+      "cardcode": "CM779090736",
+      "nombre": "FARMACIAS EUROPEAS SPA",
+      "venta_ecommerce": 43934368,
+      "venta_total": 43934368
+    },
+    {
+      "vendedor": "LEONARDO GONZALEZ PARRA",
+      "cardcode": "CM764048768",
+      "nombre": "FARMACIA Y PERFUMERIA VIVIANA DEL PILAR MALDONADO EIRL",
+      "venta_ecommerce": 43044516,
+      "venta_total": 43044516
+    },
+    {
+      "vendedor": "MARIA CORINA GARCIA",
+      "cardcode": "CM775499850",
+      "nombre": "NOTHOFAGUS DEL SUR SPA",
+      "venta_ecommerce": 42245765,
+      "venta_total": 42245765
+    },
+    {
+      "vendedor": "MARIA CORINA GARCIA",
+      "cardcode": "CM47465842",
+      "nombre": "ANNAR EDUARDO SALEH AUAD",
+      "venta_ecommerce": 42163934,
+      "venta_total": 42163934
+    },
+    {
+      "vendedor": "MARIA CORINA GARCIA",
+      "cardcode": "CM761092979",
+      "nombre": "INSTAFARMA SPA",
+      "venta_ecommerce": 41901011,
+      "venta_total": 41901011
+    },
+    {
+      "vendedor": "LEONARDO BARDI",
+      "cardcode": "CM777576135",
+      "nombre": "FARMAMONTEMAR SPA",
+      "venta_ecommerce": 41792338,
+      "venta_total": 41792338
+    },
+    {
+      "vendedor": "MARIA CORINA GARCIA",
+      "cardcode": "CM76801809K",
+      "nombre": "FARMACIAS ROGERS MIGUEL PALMA CRUCES E.I.R.L.",
+      "venta_ecommerce": 41685534,
+      "venta_total": 41685534
+    },
+    {
+      "vendedor": "LEONARDO HERNANDEZ",
+      "cardcode": "CM773983151",
+      "nombre": "FARMACIA  Y PERFUMERIA FARMABELLA SPA",
+      "venta_ecommerce": 40903586,
+      "venta_total": 40903586
+    },
+    {
+      "vendedor": "PAOLO CARTES",
+      "cardcode": "CM246270031",
+      "nombre": "JOHN HERNANDO PIRACON SIERRA",
+      "venta_ecommerce": 38430555,
+      "venta_total": 38430555
+    },
+    {
+      "vendedor": "SERGIO PICHUANTE",
+      "cardcode": "CM778768607",
+      "nombre": "SOC FARMACEUTICA Y COMERCIAL PAVEZ PAVEZ LTDA",
+      "venta_ecommerce": 38424421,
+      "venta_total": 38424421
+    },
+    {
+      "vendedor": "LEONARDO HERNANDEZ",
+      "cardcode": "CM763391426",
+      "nombre": "FARMACIA DERMAEXPRES S.P.A.",
+      "venta_ecommerce": 37412806,
+      "venta_total": 37412806
+    },
+    {
+      "vendedor": "MARIA CORINA GARCIA",
+      "cardcode": "CM059230948",
+      "nombre": "JUAN DANIEL ZAPATA ZAPATA",
+      "venta_ecommerce": 35028721,
+      "venta_total": 35028721
+    },
+    {
+      "vendedor": "LEONARDO HERNANDEZ",
+      "cardcode": "CM774245022",
+      "nombre": "SOCIEDAD COMERCIAL PAUCES CHILE LIMITADA",
+      "venta_ecommerce": 34746878,
+      "venta_total": 34746878
+    },
+    {
+      "vendedor": "PAOLO CARTES",
+      "cardcode": "CM773974462",
+      "nombre": "FARMACIA CHILEVEN SPA",
+      "venta_ecommerce": 34475397,
+      "venta_total": 34475397
+    },
+    {
+      "vendedor": "MARIA CORINA GARCIA",
+      "cardcode": "CM775280085",
+      "nombre": "CASTILLO ACUÑA LTDA",
+      "venta_ecommerce": 34217320,
+      "venta_total": 34217320
+    },
+    {
+      "vendedor": "DANIELA ARANEDA",
+      "cardcode": "CM762409151",
+      "nombre": "CLINICA VETERINARIA EMILIO JARUFE JOFRE EIRL",
+      "venta_ecommerce": 33288229,
+      "venta_total": 33288229
+    },
+    {
+      "vendedor": "LEONARDO HERNANDEZ",
+      "cardcode": "CM761231928",
+      "nombre": "FARMACIA NUEVA CENTRAL EIRL",
+      "venta_ecommerce": 32184437,
+      "venta_total": 32184437
+    },
+    {
+      "vendedor": "LEONARDO GONZALEZ PARRA",
+      "cardcode": "CM775977663",
+      "nombre": "FARMACIA Y ALIMENTOS MARDONES JARA LTDA",
+      "venta_ecommerce": 31569880,
+      "venta_total": 31569880
+    },
+    {
+      "vendedor": "SERGIO PICHUANTE",
+      "cardcode": "CM771694489",
+      "nombre": "FARMACIAS JAQUE MIMICA LTDA",
+      "venta_ecommerce": 31499426,
+      "venta_total": 31499426
+    }
+  ],
+  "vendedores": [
+    {
+      "nombre": "MARIA CORINA GARCIA",
+      "venta": 1454654036,
+      "clientes": 101
+    },
+    {
+      "nombre": "LEONARDO BARDI",
+      "venta": 1310986801,
+      "clientes": 87
+    },
+    {
+      "nombre": "LEONARDO HERNANDEZ",
+      "venta": 1297038800,
+      "clientes": 108
+    },
+    {
+      "nombre": "LEONARDO GONZALEZ PARRA",
+      "venta": 875052931,
+      "clientes": 54
+    },
+    {
+      "nombre": "PAOLO CARTES",
+      "venta": 574710737,
+      "clientes": 70
+    },
+    {
+      "nombre": "CESAR REYES",
+      "venta": 523920065,
+      "clientes": 46
+    },
+    {
+      "nombre": "SERGIO PICHUANTE",
+      "venta": 496309483,
+      "clientes": 48
+    },
+    {
+      "nombre": "CAROL RAMIREZ",
+      "venta": 252787983,
+      "clientes": 44
+    },
+    {
+      "nombre": "ANDREA RUIZ",
+      "venta": 153379030,
+      "clientes": 45
+    },
+    {
+      "nombre": "GUSTAVO FERNANDEZ",
+      "venta": 110732396,
+      "clientes": 4
+    },
+    {
+      "nombre": "DANIELA ARANEDA",
+      "venta": 65620382,
+      "clientes": 21
+    },
+    {
+      "nombre": "FABIOLA CORNEJO",
+      "venta": 56895572,
+      "clientes": 16
+    },
+    {
+      "nombre": "MARIA JOSE RAMIREZ",
+      "venta": 19087627,
+      "clientes": 7
+    },
+    {
+      "nombre": "CARLA SOTOMAYOR",
+      "venta": 11837585,
+      "clientes": 12
+    },
+    {
+      "nombre": "MARIA JOSE ROJAS",
+      "venta": 8243825,
+      "clientes": 1
+    },
+    {
+      "nombre": "WALDO POZO",
+      "venta": 6741654,
+      "clientes": 1
+    },
+    {
+      "nombre": "PAOLA ZAPATA",
+      "venta": 4777706,
+      "clientes": 1
+    },
+    {
+      "nombre": "JOSE PASCUAL",
+      "venta": 3616373,
+      "clientes": 4
+    },
+    {
+      "nombre": "MARCELA MOLINA",
+      "venta": 2832693,
+      "clientes": 1
+    },
+    {
+      "nombre": "ESTEBAN ZENTENO",
+      "venta": 117226,
+      "clientes": 1
+    }
+  ]
+}

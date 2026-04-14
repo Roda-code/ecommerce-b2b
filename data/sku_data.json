@@ -1,0 +1,112 @@
+{
+  "total_skus": 18045,
+  "estados": {
+    "Con Rotación": 4184,
+    "Abandonados": 2270,
+    "Nunca Rotados": 11588
+  },
+  "quiebres_stock": 5644,
+  "top_laboratorios": [
+    {
+      "nombre": "Sin laboratorio",
+      "skus": 1,
+      "rotacion_3m": 495374
+    },
+    {
+      "nombre": "LABORATORIO CHILE - GENERICOS",
+      "skus": 140,
+      "rotacion_3m": 184311
+    },
+    {
+      "nombre": "MEDICAL INTERNATIONAL LABORATORIES CORPORATION S.A.",
+      "skus": 133,
+      "rotacion_3m": 51491
+    },
+    {
+      "nombre": "OPKO CHILE S.A.",
+      "skus": 125,
+      "rotacion_3m": 24448
+    },
+    {
+      "nombre": "MDC HEALTH SPA",
+      "skus": 33,
+      "rotacion_3m": 20267
+    },
+    {
+      "nombre": "ASCEND LABORATORIES SPA",
+      "skus": 194,
+      "rotacion_3m": 18957
+    },
+    {
+      "nombre": "LABORATORIO CHILE - AGUDO",
+      "skus": 83,
+      "rotacion_3m": 14842
+    },
+    {
+      "nombre": "LABORATORIOS ANDROMACO S.A.",
+      "skus": 229,
+      "rotacion_3m": 12523
+    },
+    {
+      "nombre": "LABORATORIO DRAG PHARMA CHILE INVETEC SA",
+      "skus": 209,
+      "rotacion_3m": 11450
+    },
+    {
+      "nombre": "EUROFARMA CHILE SPA",
+      "skus": 301,
+      "rotacion_3m": 10888
+    },
+    {
+      "nombre": "SEVEN PHARMA CHILE SPA",
+      "skus": 304,
+      "rotacion_3m": 9811
+    },
+    {
+      "nombre": "BEIERSDORF S.A.",
+      "skus": 366,
+      "rotacion_3m": 8155
+    },
+    {
+      "nombre": "ZOETIS DE CHILE S.A.",
+      "skus": 79,
+      "rotacion_3m": 8140
+    },
+    {
+      "nombre": "LABORATORIO MAVER LTDA. PH",
+      "skus": 115,
+      "rotacion_3m": 6519
+    },
+    {
+      "nombre": "LABORATORIO SAVAL S.A.",
+      "skus": 386,
+      "rotacion_3m": 6518
+    },
+    {
+      "nombre": "HALEON CHILE SPA",
+      "skus": 113,
+      "rotacion_3m": 6297
+    },
+    {
+      "nombre": "INTERPHARMA S A",
+      "skus": 43,
+      "rotacion_3m": 5716
+    },
+    {
+      "nombre": "LABORATORIO PASTEUR S.A.",
+      "skus": 177,
+      "rotacion_3m": 4651
+    },
+    {
+      "nombre": "REUTTER S.A.",
+      "skus": 130,
+      "rotacion_3m": 4079
+    },
+    {
+      "nombre": "BAGO",
+      "skus": 129,
+      "rotacion_3m": 4069
+    }
+  ],
+  "rotacion_total_3m": 494437
+}
