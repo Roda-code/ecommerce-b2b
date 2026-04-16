@@ -1599,10 +1599,10 @@ function initCharts() {
         window.chart_visitascompras = new Chart(document.getElementById('chartVisitasCompras'), {
             type: 'bar',
             data: {
-                labels: ["Oct 2025", "Oct 2025", "Oct 2025", "Oct 2025", "Oct 2025", "Nov 2025", "Nov 2025", "Nov 2025", "Nov 2025", "Nov 2025", "Dic 2025", "Dic 2025", "Dic 2025", "Dic 2025", "Dic 2025", "Ene 2026", "Ene 2026", "Ene 2026", "Ene 2026", "Ene 2026", "Feb 2026", "Feb 2026", "Feb 2026", "Feb 2026", "Feb 2026", "Mar 2026", "Mar 2026", "Mar 2026", "Mar 2026", "Mar 2026", "Abr 2026", "Abr 2026", "Abr 2026", "Abr 2026", "Abr 2026"],
+                labels: ["Oct 2025", "Nov 2025", "Dic 2025", "Ene 2026", "Feb 2026", "Mar 2026", "Abr 2026"],
                 datasets: [
-                    { label: 'Visitas B2B', data: [21295, 21295, 21295, 21295, 21295, 19601, 19601, 19601, 19601, 19601, 19748, 19748, 19748, 19748, 19748, 19573, 19573, 19573, 19573, 19573, 17341, 17341, 17341, 17341, 17341, 19759, 19759, 19759, 19759, 19759, 9291, 9291, 9291, 9291, 9291], backgroundColor: C.primary + '99', borderRadius: 4, yAxisID: 'y' },
-                    { label: 'Compras', data: [134, 134, 134, 134, 134, 130, 130, 130, 130, 130, 196, 196, 196, 196, 196, 139, 139, 139, 139, 139, 72, 72, 72, 72, 72, 0, 0, 0, 0, 0, 93, 93, 93, 93, 93], type: 'line', borderColor: C.success, pointBackgroundColor: C.success, yAxisID: 'y1', tension: 0.3, pointRadius: 4 }
+                    { label: 'Visitas B2B', data: [21295, 19601, 19748, 19573, 17341, 19759, 9291], backgroundColor: C.primary + '99', borderRadius: 4, yAxisID: 'y' },
+                    { label: 'Compras', data: [134, 130, 196, 139, 72, 0, 93], type: 'line', borderColor: C.success, pointBackgroundColor: C.success, yAxisID: 'y1', tension: 0.3, pointRadius: 4 }
                 ]
             },
             options: {
@@ -1712,10 +1712,10 @@ function initCharts() {
         window.chart_vismes = new Chart(document.getElementById('chartVisMes'), {
             type: 'bar',
             data: {
-                labels: ["Oct 2025", "Oct 2025", "Oct 2025", "Oct 2025", "Oct 2025", "Nov 2025", "Nov 2025", "Nov 2025", "Nov 2025", "Nov 2025", "Dic 2025", "Dic 2025", "Dic 2025", "Dic 2025", "Dic 2025", "Ene 2026", "Ene 2026", "Ene 2026", "Ene 2026", "Ene 2026", "Feb 2026", "Feb 2026", "Feb 2026", "Feb 2026", "Feb 2026", "Mar 2026", "Mar 2026", "Mar 2026", "Mar 2026", "Mar 2026", "Abr 2026", "Abr 2026", "Abr 2026", "Abr 2026", "Abr 2026"],
+                labels: ["Oct 2025", "Nov 2025", "Dic 2025", "Ene 2026", "Feb 2026", "Mar 2026", "Abr 2026"],
                 datasets: [
-                    { label: 'Visitas Catálogo', data: [3407, 3407, 3407, 3407, 3407, 3136, 3136, 3136, 3136, 3136, 3160, 3160, 3160, 3160, 3160, 3132, 3132, 3132, 3132, 3132, 2775, 2775, 2775, 2775, 2775, 3161, 3161, 3161, 3161, 3161, 1487, 1487, 1487, 1487, 1487], backgroundColor: C.primary + '88', borderRadius: 4, yAxisID: 'y' },
-                    { label: 'Compras', data: [134, 134, 134, 134, 134, 130, 130, 130, 130, 130, 196, 196, 196, 196, 196, 139, 139, 139, 139, 139, 72, 72, 72, 72, 72, 0, 0, 0, 0, 0, 93, 93, 93, 93, 93], type: 'line', borderColor: C.success, pointBackgroundColor: C.success, yAxisID: 'y1', tension: 0.3, pointRadius: 3 }
+                    { label: 'Visitas Catálogo', data: [3407, 3136, 3160, 3132, 2775, 3161, 1487], backgroundColor: C.primary + '88', borderRadius: 4, yAxisID: 'y' },
+                    { label: 'Compras', data: [134, 130, 196, 139, 72, 0, 93], type: 'line', borderColor: C.success, pointBackgroundColor: C.success, yAxisID: 'y1', tension: 0.3, pointRadius: 3 }
                 ]
             },
             options: {
