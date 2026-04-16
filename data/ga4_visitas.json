@@ -1,17 +1,276 @@
 {
     "visitas_fuente": [
-        {"fuente": "Búsqueda Orgánica (Google)", "sesiones": 4120, "pct": 34.2},
-        {"fuente": "Email / MailUp", "sesiones": 2859, "pct": 23.7},
-        {"fuente": "Directo (URL)", "sesiones": 2680, "pct": 22.2},
-        {"fuente": "Campañas Catálogo (Publitas)", "sesiones": 1540, "pct": 12.8},
-        {"fuente": "Redes Sociales", "sesiones": 860, "pct": 7.1}
+        {
+            "fuente": "Directo (URL)",
+            "sesiones": 16188,
+            "pct": 93.4
+        },
+        {
+            "fuente": "Búsqueda Orgánica (Google)",
+            "sesiones": 490,
+            "pct": 2.8
+        },
+        {
+            "fuente": "Campañas Catálogo (Publitas)",
+            "sesiones": 335,
+            "pct": 1.9
+        },
+        {
+            "fuente": "Email / MailUp",
+            "sesiones": 262,
+            "pct": 1.5
+        },
+        {
+            "fuente": "Sin clasificar",
+            "sesiones": 53,
+            "pct": 0.3
+        }
     ],
     "visitas_mensuales": [
-        {"mes": "Oct 2025", "visitas_b2b": 9800, "visitas_catalogo": 1420, "compras": 310, "venta_online": 73600000},
-        {"mes": "Nov 2025", "visitas_b2b": 10200, "visitas_catalogo": 1580, "compras": 285, "venta_online": 77200000},
-        {"mes": "Dic 2025", "visitas_b2b": 14500, "visitas_catalogo": 2340, "compras": 520, "venta_online": 115400000},
-        {"mes": "Ene 2026", "visitas_b2b": 13200, "visitas_catalogo": 2100, "compras": 445, "venta_online": 132300000},
-        {"mes": "Feb 2026", "visitas_b2b": 10800, "visitas_catalogo": 1750, "compras": 340, "venta_online": 90000000},
-        {"mes": "Mar 2026", "visitas_b2b": 12050, "visitas_catalogo": 1995, "compras": 395, "venta_online": 115200000}
+        {
+            "mes": "Oct 2025",
+            "visitas_b2b": 21295,
+            "visitas_catalogo": 3407,
+            "compras": 134,
+            "venta_online": 33794124
+        },
+        {
+            "mes": "Oct 2025",
+            "visitas_b2b": 21295,
+            "visitas_catalogo": 3407,
+            "compras": 134,
+            "venta_online": 33794124
+        },
+        {
+            "mes": "Oct 2025",
+            "visitas_b2b": 21295,
+            "visitas_catalogo": 3407,
+            "compras": 134,
+            "venta_online": 33794124
+        },
+        {
+            "mes": "Oct 2025",
+            "visitas_b2b": 21295,
+            "visitas_catalogo": 3407,
+            "compras": 134,
+            "venta_online": 33794124
+        },
+        {
+            "mes": "Oct 2025",
+            "visitas_b2b": 21295,
+            "visitas_catalogo": 3407,
+            "compras": 134,
+            "venta_online": 33794124
+        },
+        {
+            "mes": "Nov 2025",
+            "visitas_b2b": 19601,
+            "visitas_catalogo": 3136,
+            "compras": 130,
+            "venta_online": 37605402
+        },
+        {
+            "mes": "Nov 2025",
+            "visitas_b2b": 19601,
+            "visitas_catalogo": 3136,
+            "compras": 130,
+            "venta_online": 37605402
+        },
+        {
+            "mes": "Nov 2025",
+            "visitas_b2b": 19601,
+            "visitas_catalogo": 3136,
+            "compras": 130,
+            "venta_online": 37605402
+        },
+        {
+            "mes": "Nov 2025",
+            "visitas_b2b": 19601,
+            "visitas_catalogo": 3136,
+            "compras": 130,
+            "venta_online": 37605402
+        },
+        {
+            "mes": "Nov 2025",
+            "visitas_b2b": 19601,
+            "visitas_catalogo": 3136,
+            "compras": 130,
+            "venta_online": 37605402
+        },
+        {
+            "mes": "Dic 2025",
+            "visitas_b2b": 19748,
+            "visitas_catalogo": 3160,
+            "compras": 196,
+            "venta_online": 58303977
+        },
+        {
+            "mes": "Dic 2025",
+            "visitas_b2b": 19748,
+            "visitas_catalogo": 3160,
+            "compras": 196,
+            "venta_online": 58303977
+        },
+        {
+            "mes": "Dic 2025",
+            "visitas_b2b": 19748,
+            "visitas_catalogo": 3160,
+            "compras": 196,
+            "venta_online": 58303977
+        },
+        {
+            "mes": "Dic 2025",
+            "visitas_b2b": 19748,
+            "visitas_catalogo": 3160,
+            "compras": 196,
+            "venta_online": 58303977
+        },
+        {
+            "mes": "Dic 2025",
+            "visitas_b2b": 19748,
+            "visitas_catalogo": 3160,
+            "compras": 196,
+            "venta_online": 58303977
+        },
+        {
+            "mes": "Ene 2026",
+            "visitas_b2b": 19573,
+            "visitas_catalogo": 3132,
+            "compras": 139,
+            "venta_online": 41530185
+        },
+        {
+            "mes": "Ene 2026",
+            "visitas_b2b": 19573,
+            "visitas_catalogo": 3132,
+            "compras": 139,
+            "venta_online": 41530185
+        },
+        {
+            "mes": "Ene 2026",
+            "visitas_b2b": 19573,
+            "visitas_catalogo": 3132,
+            "compras": 139,
+            "venta_online": 41530185
+        },
+        {
+            "mes": "Ene 2026",
+            "visitas_b2b": 19573,
+            "visitas_catalogo": 3132,
+            "compras": 139,
+            "venta_online": 41530185
+        },
+        {
+            "mes": "Ene 2026",
+            "visitas_b2b": 19573,
+            "visitas_catalogo": 3132,
+            "compras": 139,
+            "venta_online": 41530185
+        },
+        {
+            "mes": "Feb 2026",
+            "visitas_b2b": 17341,
+            "visitas_catalogo": 2775,
+            "compras": 72,
+            "venta_online": 26466275
+        },
+        {
+            "mes": "Feb 2026",
+            "visitas_b2b": 17341,
+            "visitas_catalogo": 2775,
+            "compras": 72,
+            "venta_online": 26466275
+        },
+        {
+            "mes": "Feb 2026",
+            "visitas_b2b": 17341,
+            "visitas_catalogo": 2775,
+            "compras": 72,
+            "venta_online": 26466275
+        },
+        {
+            "mes": "Feb 2026",
+            "visitas_b2b": 17341,
+            "visitas_catalogo": 2775,
+            "compras": 72,
+            "venta_online": 26466275
+        },
+        {
+            "mes": "Feb 2026",
+            "visitas_b2b": 17341,
+            "visitas_catalogo": 2775,
+            "compras": 72,
+            "venta_online": 26466275
+        },
+        {
+            "mes": "Mar 2026",
+            "visitas_b2b": 19759,
+            "visitas_catalogo": 3161,
+            "compras": 0,
+            "venta_online": 0
+        },
+        {
+            "mes": "Mar 2026",
+            "visitas_b2b": 19759,
+            "visitas_catalogo": 3161,
+            "compras": 0,
+            "venta_online": 0
+        },
+        {
+            "mes": "Mar 2026",
+            "visitas_b2b": 19759,
+            "visitas_catalogo": 3161,
+            "compras": 0,
+            "venta_online": 0
+        },
+        {
+            "mes": "Mar 2026",
+            "visitas_b2b": 19759,
+            "visitas_catalogo": 3161,
+            "compras": 0,
+            "venta_online": 0
+        },
+        {
+            "mes": "Mar 2026",
+            "visitas_b2b": 19759,
+            "visitas_catalogo": 3161,
+            "compras": 0,
+            "venta_online": 0
+        },
+        {
+            "mes": "Abr 2026",
+            "visitas_b2b": 9291,
+            "visitas_catalogo": 1487,
+            "compras": 93,
+            "venta_online": 25436722
+        },
+        {
+            "mes": "Abr 2026",
+            "visitas_b2b": 9291,
+            "visitas_catalogo": 1487,
+            "compras": 93,
+            "venta_online": 25436722
+        },
+        {
+            "mes": "Abr 2026",
+            "visitas_b2b": 9291,
+            "visitas_catalogo": 1487,
+            "compras": 93,
+            "venta_online": 25436722
+        },
+        {
+            "mes": "Abr 2026",
+            "visitas_b2b": 9291,
+            "visitas_catalogo": 1487,
+            "compras": 93,
+            "venta_online": 25436722
+        },
+        {
+            "mes": "Abr 2026",
+            "visitas_b2b": 9291,
+            "visitas_catalogo": 1487,
+            "compras": 93,
+            "venta_online": 25436722
+        }
     ]
 }
