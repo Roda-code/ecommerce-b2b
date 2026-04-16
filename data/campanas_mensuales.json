@@ -1,0 +1,8 @@
+[
+    {"mes": "Oct 2025", "campanas": 14, "unidades": 45195, "ventas": 73600000},
+    {"mes": "Nov 2025", "campanas": 13, "unidades": 27463, "ventas": 77200000},
+    {"mes": "Dic 2025", "campanas": 14, "unidades": 107457, "ventas": 115400000},
+    {"mes": "Ene 2026", "campanas": 15, "unidades": 58702, "ventas": 132300000},
+    {"mes": "Feb 2026", "campanas": 12, "unidades": 36487, "ventas": 90000000},
+    {"mes": "Mar 2026", "campanas": 8,  "unidades": 40443, "ventas": 115200000}
+]

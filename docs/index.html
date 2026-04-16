@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClinicalMarket — Dashboard Retail v7</title>
+<title>ClinicalMarket — Dashboard Retail v8</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -18,15 +18,50 @@
     --text: #2c3e50;
     --muted: #7f8c8d;
     --border: #e8ecf1;
+    --bg-dark: #1a1a2e;
+    --card-dark: #16213e;
+    --text-dark: #e0e0e0;
+    --border-dark: #2a2a4a;
 }
+
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text); font-size:14px; }
+body { font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text); font-size:14px; transition:background-color .3s, color .3s; }
+body.dark { background:var(--bg-dark); color:var(--text-dark); }
 
-.header { background:linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%); color:white; padding:20px 28px; }
-.header h1 { font-size:22px; font-weight:800; }
+.header { background:linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%); color:white; padding:20px 28px; display:flex; justify-content:space-between; align-items:center; }
+.header-left h1 { font-size:22px; font-weight:800; }
 .header-sub { font-size:12px; opacity:.85; margin-top:4px; display:flex; gap:20px; flex-wrap:wrap; }
+.header-right { display:flex; gap:10px; align-items:center; }
 
-.nav { background:white; border-bottom:2px solid var(--border); padding:0 20px; display:flex; gap:0; overflow-x:auto; position:sticky; top:0; z-index:100; }
+.theme-toggle {
+    background:rgba(255,255,255,.2);
+    border:1px solid rgba(255,255,255,.3);
+    color:white;
+    padding:8px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:16px;
+    transition:all .2s;
+}
+.theme-toggle:hover { background:rgba(255,255,255,.3); }
+
+.print-btn {
+    background:rgba(255,255,255,.2);
+    border:1px solid rgba(255,255,255,.3);
+    color:white;
+    padding:8px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:500;
+    transition:all .2s;
+    font-family:inherit;
+}
+.print-btn:hover { background:rgba(255,255,255,.3); }
+
+.nav { background:var(--card); border-bottom:2px solid var(--border); padding:0 20px; display:flex; gap:0; overflow-x:auto; position:sticky; top:0; z-index:100; }
+body.dark .nav { background:var(--card-dark); border-bottom-color:var(--border-dark); }
+
 .nav button { padding:12px 16px; border:none; background:none; font-family:inherit; font-size:12px; font-weight:500; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; white-space:nowrap; transition:all .2s; }
 .nav button:hover { color:var(--text); }
 .nav button.active { color:var(--primary); border-bottom-color:var(--primary); font-weight:600; }
@@ -35,7 +70,9 @@ body { font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text)
 .section.active { display:block; }
 
 .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin:16px 0; }
-.kpi { background:var(--card); border-radius:10px; padding:16px; border-left:4px solid var(--primary); box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.kpi { background:var(--card); border-radius:10px; padding:16px; border-left:4px solid var(--primary); box-shadow:0 1px 3px rgba(0,0,0,.05); transition:all .3s; }
+body.dark .kpi { background:var(--card-dark); box-shadow:0 1px 3px rgba(0,0,0,.3); }
+
 .kpi-label { font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); font-weight:600; }
 .kpi-value { font-size:24px; font-weight:800; color:var(--dark); margin:4px 0 2px; }
 .kpi-sub { font-size:11px; color:var(--muted); }
@@ -47,18 +84,34 @@ body { font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text)
 .kpi-red .kpi-value { color:var(--danger); }
 
 .insight { background:#fffbeb; border-left:4px solid var(--warning); padding:12px 16px; border-radius:8px; margin:12px 0; font-size:12px; line-height:1.6; }
+body.dark .insight { background:rgba(243, 156, 18, .1); }
+
 .insight strong { color:var(--text); }
 .insight-blue { background:#eef6fd; border-left-color:var(--primary); }
+body.dark .insight-blue { background:rgba(13, 167, 238, .1); }
 
 .table-wrap { background:var(--card); border-radius:10px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.05); margin:12px 0; }
+body.dark .table-wrap { background:var(--card-dark); box-shadow:0 1px 3px rgba(0,0,0,.3); }
+
 .table-header { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid var(--border); }
+body.dark .table-header { border-bottom-color:var(--border-dark); }
+
 .table-header h3 { font-size:14px; font-weight:600; }
+.row-count { font-size:11px; color:var(--muted); }
+
 table { width:100%; border-collapse:collapse; font-size:12px; }
 th { background:#f8f9fb; padding:8px 12px; text-align:left; font-weight:600; font-size:10px; text-transform:uppercase; letter-spacing:.3px; color:var(--muted); border-bottom:1px solid var(--border); }
+body.dark th { background:var(--border-dark); color:var(--muted); }
+
 td { padding:8px 12px; border-bottom:1px solid #f2f4f7; }
+body.dark td { border-bottom-color:var(--border-dark); }
+
 tr:hover { background:#fafbfd; }
+body.dark tr:hover { background:rgba(255,255,255,.05); }
 
 .chart-box { background:var(--card); border-radius:10px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.05); margin:12px 0; }
+body.dark .chart-box { background:var(--card-dark); box-shadow:0 1px 3px rgba(0,0,0,.3); }
+
 .chart-box h3 { font-size:13px; font-weight:600; margin-bottom:8px; }
 .chart-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 @media(max-width:900px) { .chart-row { grid-template-columns:1fr; } }
@@ -69,10 +122,14 @@ tr:hover { background:#fafbfd; }
 
 .btn { display:inline-flex; align-items:center; gap:5px; padding:6px 12px; border-radius:6px; border:1px solid var(--border); background:white; font-family:inherit; font-size:11px; font-weight:500; cursor:pointer; color:var(--text); transition:all .2s; }
 .btn:hover { background:var(--primary); color:white; border-color:var(--primary); }
+body.dark .btn { background:var(--card-dark); border-color:var(--border-dark); color:var(--text-dark); }
+body.dark .btn:hover { background:var(--primary); color:white; border-color:var(--primary); }
 
 .filter-bar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:10px 0; }
-.filter-bar input { padding:7px 12px; border:1px solid var(--border); border-radius:6px; font-family:inherit; font-size:12px; width:260px; }
-.filter-bar select { padding:7px 12px; border:1px solid var(--border); border-radius:6px; font-family:inherit; font-size:12px; }
+.filter-bar input { padding:7px 12px; border:1px solid var(--border); border-radius:6px; font-family:inherit; font-size:12px; width:260px; background:var(--card); color:var(--text); }
+.filter-bar select { padding:7px 12px; border:1px solid var(--border); border-radius:6px; font-family:inherit; font-size:12px; background:var(--card); color:var(--text); }
+body.dark .filter-bar input { background:var(--card-dark); border-color:var(--border-dark); color:var(--text-dark); }
+body.dark .filter-bar select { background:var(--card-dark); border-color:var(--border-dark); color:var(--text-dark); }
 
 .funnel { display:flex; gap:0; align-items:stretch; margin:16px 0; }
 .funnel-step { flex:1; text-align:center; padding:12px 6px; position:relative; }
@@ -84,17 +141,65 @@ tr:hover { background:#fafbfd; }
 .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
 @media(max-width:900px) { .grid-3 { grid-template-columns:1fr; } }
 
-@media print { .nav, .btn, .filter-bar { display:none; } .section { display:block !important; } }
+.alerts-box { background:var(--card); border-radius:10px; padding:16px; margin:12px 0; border-left:4px solid var(--success); box-shadow:0 1px 3px rgba(0,0,0,.05); }
+body.dark .alerts-box { background:var(--card-dark); box-shadow:0 1px 3px rgba(0,0,0,.3); }
+
+.alert-item { padding:8px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; font-size:12px; }
+body.dark .alert-item { border-bottom-color:var(--border-dark); }
+
+.alert-item:last-child { border-bottom:none; }
+.alert-item strong { color:var(--dark); }
+
+.vendor-bar { display:flex; gap:8px; margin:8px 0; }
+.vendor-item { flex:1; text-align:center; padding:8px; background:#f8f9fb; border-radius:6px; font-size:11px; }
+body.dark .vendor-item { background:var(--border-dark); }
+
+.scroll-to-top {
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:40px;
+    height:40px;
+    background:var(--primary);
+    color:white;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    box-shadow:0 4px 8px rgba(0,0,0,.2);
+    transition:all .3s;
+    z-index:999;
+}
+.scroll-to-top:hover { transform:translateY(-3px); box-shadow:0 6px 12px rgba(0,0,0,.3); }
+.scroll-to-top.show { display:flex; }
+
+footer { background:#2c3e50; color:rgba(255,255,255,.7); padding:16px 28px; text-align:center; font-size:11px; margin-top:20px; }
+body.dark footer { background:#0f0f1e; }
+
+footer strong { color:white; }
+footer a { color:var(--primary); text-decoration:none; }
+footer a:hover { text-decoration:underline; }
+
+@media print { .nav, .btn, .filter-bar, footer, .theme-toggle, .print-btn, .scroll-to-top { display:none; } .section { display:block !important; } }
 </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>ClinicalMarket B2B — Dashboard Retail v7</h1>
-    <div class="header-sub">
-        <span>Canal retail: farmacias, droguerías, pet shops, veterinarias</span>
-        <span>Generado: 13 Abril 2026</span>
-        <span>Fuentes: SAP · Power BI · GA4 · MailUp · Publitas</span>
+    <div class="header-left">
+        <h1>ClinicalMarket B2B — Dashboard Retail v8</h1>
+        <div class="header-sub">
+            <span>Canal retail: farmacias, droguerías, pet shops, veterinarias</span>
+            <span>Generado: 16 Abril 2026</span>
+            <span>Fuentes: SAP · Power BI · GA4 · MailUp · Publitas</span>
+        </div>
+    </div>
+    <div class="header-right">
+        <button class="theme-toggle" id="themeToggle" title="Alternar modo oscuro">🌙</button>
+        <button class="print-btn" onclick="window.print()" title="Imprimir dashboard">🖨 Imprimir</button>
     </div>
 </div>
 
@@ -103,6 +208,7 @@ tr:hover { background:#fafbfd; }
     <button onclick="showTab('comparativo')">Comparativo</button>
     <button onclick="showTab('campanas')">Campañas</button>
     <button onclick="showTab('digital')">Digital</button>
+    <button onclick="showTab('mailing')">Mailing</button>
     <button onclick="showTab('productos')">Productos</button>
     <button onclick="showTab('clientes')">Clientes</button>
 </div>
@@ -119,7 +225,7 @@ tr:hover { background:#fafbfd; }
         <div class="kpi">
             <div class="kpi-label">Venta Marzo 2026</div>
             <div class="kpi-value">$865.4M</div>
-            <div class="kpi-sub"><span style="color:var(--success)">▲ 0.1%</span> vs Mar 2025 · <span class="badge">SAP</span></div>
+            <div class="kpi-sub"><span style="color:{'var(--success)' if crec_venta > 0 else 'var(--danger)'}">{'▲' if crec_venta > 0 else '▼'} 0.1%</span> vs Mar 2025 · <span class="badge">SAP</span></div>
         </div>
         <div class="kpi kpi-green">
             <div class="kpi-label">Margen Bruto</div>
@@ -187,14 +293,14 @@ tr:hover { background:#fafbfd; }
     <div class="insight">Mismo mes, distinto año. Así se ve el crecimiento real sin estacionalidad.</div>
 
     <div class="kpi-grid">
-        <div class="kpi kpi-green">
+        <div class="kpi {'kpi-green' if crec_venta > 0 else 'kpi-red'}">
             <div class="kpi-label">Cambio en Venta</div>
-            <div class="kpi-value">▲ 0.1%</div>
+            <div class="kpi-value">{'▲' if crec_venta > 0 else '▼'} 0.1%</div>
             <div class="kpi-sub">$864.8M → $865.4M</div>
         </div>
-        <div class="kpi kpi-red">
+        <div class="kpi {'kpi-red' if crec_unid < 0 else 'kpi-green'}">
             <div class="kpi-label">Cambio en Unidades</div>
-            <div class="kpi-value">▼ -4.6%</div>
+            <div class="kpi-value">{'▲' if crec_unid > 0 else '▼'} -4.6%</div>
             <div class="kpi-sub">366,824 → 349,784</div>
         </div>
         <div class="kpi kpi-green">
@@ -289,6 +395,7 @@ tr:hover { background:#fafbfd; }
         </div>
         <div class="filter-bar">
             <input type="text" placeholder="Buscar SKU o descripción..." id="filterSkuComp">
+            <span class="row-count" id="rowCountSkuComp"></span>
         </div>
         <table id="tblSkuComp">
             <thead><tr><th>SKU</th><th>Descripción</th><th>Campaña</th><th>Venta 2025</th><th>Venta 2026</th><th>Crec.</th></tr></thead>
@@ -486,6 +593,7 @@ tr:hover { background:#fafbfd; }
         </div>
         <div class="filter-bar">
             <input type="text" placeholder="Buscar producto..." id="filterInvierno">
+            <span class="row-count" id="rowCountInvierno"></span>
         </div>
         <table id="tblInvierno">
             <thead><tr><th>SKU</th><th>Producto</th><th>Segmento</th><th>Venta Feb</th><th>Venta Mar</th><th>Crec. Feb→Mar</th></tr></thead>
@@ -690,16 +798,16 @@ tr:hover { background:#fafbfd; }
         </div>
         <div class="filter-bar">
             <input type="text" placeholder="Buscar campaña..." id="filterDigCamp">
+            <span class="row-count" id="rowCountDigCamp"></span>
         </div>
         <table id="tblDigCamp">
             <thead><tr>
-                <th>Campaña</th><th>URL Catálogo</th><th style="text-align:right">Visitas</th>
+                <th>Campaña</th><th style="text-align:right">Visitas</th>
                 <th style="text-align:right">Clics Productos</th><th style="text-align:right">Compras</th>
                 <th style="text-align:right">Venta</th><th style="text-align:right">% Conversión</th>
             </tr></thead>
             <tbody><tr>
         <td><strong>PREP. INVIERNO</strong></td>
-        <td><code>/catalogos/prep-invierno-2026</code></td>
         <td style="text-align:right">680</td>
         <td style="text-align:right">245</td>
         <td style="text-align:right">38</td>
@@ -707,7 +815,6 @@ tr:hover { background:#fafbfd; }
         <td style="color:#27ae60;font-weight:700;text-align:right">5.6%</td>
     </tr><tr>
         <td><strong>INVIERNO VET</strong></td>
-        <td><code>/catalogos/invierno-vet-2026</code></td>
         <td style="text-align:right">412</td>
         <td style="text-align:right">156</td>
         <td style="text-align:right">22</td>
@@ -715,7 +822,6 @@ tr:hover { background:#fafbfd; }
         <td style="color:#27ae60;font-weight:700;text-align:right">5.3%</td>
     </tr><tr>
         <td><strong>MES SALUD</strong></td>
-        <td><code>/catalogos/mes-salud-2026</code></td>
         <td style="text-align:right">285</td>
         <td style="text-align:right">98</td>
         <td style="text-align:right">14</td>
@@ -723,7 +829,6 @@ tr:hover { background:#fafbfd; }
         <td style="color:#f39c12;font-weight:700;text-align:right">4.9%</td>
     </tr><tr>
         <td><strong>DRAGPHARMA</strong></td>
-        <td><code>/catalogos/dragpharma-2026</code></td>
         <td style="text-align:right">198</td>
         <td style="text-align:right">87</td>
         <td style="text-align:right">18</td>
@@ -731,7 +836,6 @@ tr:hover { background:#fafbfd; }
         <td style="color:#27ae60;font-weight:700;text-align:right">9.1%</td>
     </tr><tr>
         <td><strong>MAVER</strong></td>
-        <td><code>/catalogos/maver-2026</code></td>
         <td style="text-align:right">165</td>
         <td style="text-align:right">62</td>
         <td style="text-align:right">8</td>
@@ -739,7 +843,6 @@ tr:hover { background:#fafbfd; }
         <td style="color:#f39c12;font-weight:700;text-align:right">4.8%</td>
     </tr><tr>
         <td><strong>GENOMMA</strong></td>
-        <td><code>/catalogos/genomma-2026</code></td>
         <td style="text-align:right">95</td>
         <td style="text-align:right">41</td>
         <td style="text-align:right">6</td>
@@ -747,7 +850,6 @@ tr:hover { background:#fafbfd; }
         <td style="color:#27ae60;font-weight:700;text-align:right">6.3%</td>
     </tr><tr>
         <td><strong>MARATHON</strong></td>
-        <td><code>/catalogos/marathon-2026</code></td>
         <td style="text-align:right">88</td>
         <td style="text-align:right">34</td>
         <td style="text-align:right">5</td>
@@ -755,7 +857,6 @@ tr:hover { background:#fafbfd; }
         <td style="color:#27ae60;font-weight:700;text-align:right">5.7%</td>
     </tr><tr>
         <td><strong>ANASAC</strong></td>
-        <td><code>/catalogos/anasac-2026</code></td>
         <td style="text-align:right">72</td>
         <td style="text-align:right">28</td>
         <td style="text-align:right">4</td>
@@ -784,6 +885,7 @@ tr:hover { background:#fafbfd; }
         </div>
         <div class="filter-bar">
             <input type="text" placeholder="Buscar producto o campaña..." id="filterDigProd">
+            <span class="row-count" id="rowCountDigProd"></span>
         </div>
         <table id="tblDigProd">
             <thead><tr><th>SKU</th><th>Producto</th><th>Campaña</th><th style="text-align:right">Clics</th><th style="text-align:right">Compras</th><th style="text-align:right">Venta</th></tr></thead>
@@ -883,6 +985,74 @@ tr:hover { background:#fafbfd; }
     </div>
 </div>
 
+<!-- ================================ MAILING ================================ -->
+<div class="section" id="mailing">
+    <h2 style="font-size:16px">Email Marketing — Campañas y Rendimiento</h2>
+    <div class="insight">
+        <strong>¿Qué ves aquí?</strong> Historial completo de campañas de email, tasa de apertura, clics y engagement.
+        Los datos vienen de MailUp. Cada campaña es monitoreada para entender qué mensajes resuenan mejor con tu audiencia.
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi">
+            <div class="kpi-label">Total Enviados</div>
+            <div class="kpi-value">3,100</div>
+            <div class="kpi-sub">Últimas 1 campañas</div>
+        </div>
+        <div class="kpi kpi-green">
+            <div class="kpi-label">Promedio Apertura</div>
+            <div class="kpi-value">23.3%</div>
+            <div class="kpi-sub">Tasa de apertura promedio</div>
+        </div>
+        <div class="kpi kpi-orange">
+            <div class="kpi-label">Promedio Clics</div>
+            <div class="kpi-value">4.0%</div>
+            <div class="kpi-sub">Tasa de clic promedio</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-label">Última Campaña</div>
+            <div class="kpi-value">Catálogos Abril 2026</div>
+            <div class="kpi-sub">3,100 envíos · 23.26% apertura</div>
+        </div>
+    </div>
+
+    <div class="chart-box">
+        <h3>Tasa de Apertura por Campaña</h3>
+        <canvas id="chartMailingTasas" height="140"></canvas>
+    </div>
+
+    <div class="table-wrap">
+        <div class="table-header">
+            <h3>Historial de Campañas</h3>
+            <button class="btn" onclick="exportTable('tblMailing','mailing_campanas.csv')">Exportar CSV</button>
+        </div>
+        <div class="filter-bar">
+            <input type="text" placeholder="Buscar campaña..." id="filterMailing">
+            <span class="row-count" id="rowCountMailing"></span>
+        </div>
+        <table id="tblMailing">
+            <thead><tr><th>Fecha</th><th>Campaña</th><th style="text-align:right">Enviados</th><th style="text-align:right">Aperturas</th><th style="text-align:right">% Apertura</th><th style="text-align:right">Clics</th><th style="text-align:right">% Clics</th></tr></thead>
+            <tbody><tr>
+        <td>2026-04-10</td>
+        <td><strong>Catálogos Abril 2026</strong></td>
+        <td style="text-align:right">3,100</td>
+        <td style="text-align:right">672</td>
+        <td style="text-align:right;color:#27ae60;font-weight:600">23.26%</td>
+        <td style="text-align:right">115</td>
+        <td style="text-align:right;color:#f39c12;font-weight:600">3.98%</td>
+    </tr></tbody>
+        </table>
+    </div>
+
+    <div class="insight-blue insight">
+        <strong>Recomendaciones:</strong><br>
+        — La tasa de apertura promedio es 23.3%. Campañas con asunto corto y personalizadas tienden a superar este promedio.<br>
+        — La tasa de clic promedio es 4.0%. Mejorar el CTA (call-to-action) y la relevancia del contenido puede aumentar este indicador.<br>
+        — Monitorear las campañas que superan ambos promedios para identificar patrones en asunto, horario de envío y segmentación.<br>
+        — Considerar A/B testing en asuntos y contenido para optimizar engagement.
+    </div>
+</div>
+
 <!-- ================================ PRODUCTOS ================================ -->
 <div class="section" id="productos">
     <h2 style="font-size:16px">Productos — Estado del Catálogo</h2>
@@ -932,6 +1102,7 @@ tr:hover { background:#fafbfd; }
         </div>
         <div class="filter-bar">
             <input type="text" placeholder="Buscar laboratorio..." id="filterProdLab">
+            <span class="row-count" id="rowCountProdLab"></span>
         </div>
         <table id="tblProdLab">
             <thead><tr><th>Laboratorio</th><th style="text-align:right">SKUs</th><th style="text-align:right">Rotación 3M (unid)</th><th style="text-align:right">Rotación/SKU</th></tr></thead>
@@ -1020,6 +1191,37 @@ tr:hover { background:#fafbfd; }
         </div>
     </div>
 
+    <div class="alerts-box">
+        <h3 style="font-size:13px;margin-bottom:12px;color:var(--dark)">Top 5 Clientes Estratégicos (Pareto)</h3>
+        <div class="alert-item" style="padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--border)">
+            <strong>MEDICAL KIT SPA</strong>
+            <span style="color:var(--success)">$200.7M</span>
+        </div>
+        <div class="alert-item" style="padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--border)">
+            <strong>FARMACEUTICA CHILOÉ LIMITADA</strong>
+            <span style="color:var(--success)">$187.8M</span>
+        </div>
+        <div class="alert-item" style="padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--border)">
+            <strong>SOCIEDAD COMERCIALIZADORA VERONICA LTDA.</strong>
+            <span style="color:var(--success)">$168.2M</span>
+        </div>
+        <div class="alert-item" style="padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--border)">
+            <strong>SUSAN CATHERINE BASTIAS ALVAREZ</strong>
+            <span style="color:var(--success)">$164.3M</span>
+        </div>
+        <div class="alert-item">
+            <strong>COMERCIAL BARTSCH Y CIA LTDA</strong>
+            <span style="color:var(--success)">$128.9M</span>
+        </div>
+    </div>
+
+    <div class="alerts-box">
+        <h3 style="font-size:13px;margin-bottom:12px;color:var(--dark)">Distribución por Vendedor</h3>
+        <div class="vendor-bar">
+            <div class="vendor-item"><div style="font-weight:600">10</div><div>MARIA CORINA GARCIA</div></div><div class="vendor-item"><div style="font-weight:600">8</div><div>LEONARDO BARDI</div></div><div class="vendor-item"><div style="font-weight:600">10</div><div>LEONARDO HERNANDEZ</div></div><div class="vendor-item"><div style="font-weight:600">7</div><div>LEONARDO GONZALEZ PARRA</div></div><div class="vendor-item"><div style="font-weight:600">4</div><div>PAOLO CARTES</div></div>
+        </div>
+    </div>
+
     <div class="chart-box">
         <h3>Distribución Pareto</h3>
         <canvas id="chartPareto" height="120"></canvas>
@@ -1036,6 +1238,7 @@ tr:hover { background:#fafbfd; }
                 <option value="">Todos los vendedores</option>
                 <option value="MARIA CORINA GARCIA">MARIA CORINA GARCIA</option><option value="LEONARDO BARDI">LEONARDO BARDI</option><option value="LEONARDO HERNANDEZ">LEONARDO HERNANDEZ</option><option value="LEONARDO GONZALEZ PARRA">LEONARDO GONZALEZ PARRA</option><option value="PAOLO CARTES">PAOLO CARTES</option><option value="CESAR REYES">CESAR REYES</option><option value="SERGIO PICHUANTE">SERGIO PICHUANTE</option><option value="CAROL RAMIREZ">CAROL RAMIREZ</option><option value="ANDREA RUIZ">ANDREA RUIZ</option><option value="GUSTAVO FERNANDEZ">GUSTAVO FERNANDEZ</option><option value="DANIELA ARANEDA">DANIELA ARANEDA</option><option value="FABIOLA CORNEJO">FABIOLA CORNEJO</option><option value="MARIA JOSE RAMIREZ">MARIA JOSE RAMIREZ</option><option value="CARLA SOTOMAYOR">CARLA SOTOMAYOR</option><option value="MARIA JOSE ROJAS">MARIA JOSE ROJAS</option><option value="WALDO POZO">WALDO POZO</option><option value="PAOLA ZAPATA">PAOLA ZAPATA</option><option value="JOSE PASCUAL">JOSE PASCUAL</option><option value="MARCELA MOLINA">MARCELA MOLINA</option><option value="ESTEBAN ZENTENO">ESTEBAN ZENTENO</option>
             </select>
+            <span class="row-count" id="rowCountClientes"></span>
         </div>
         <table id="tblClientes">
             <thead><tr><th>#</th><th>Cliente</th><th>Vendedor</th><th style="text-align:right">Venta Total</th><th>% Total</th></tr></thead>
@@ -1224,33 +1427,82 @@ tr:hover { background:#fafbfd; }
     </div>
 </div>
 
+<!-- ================================ FOOTER ================================ -->
+<footer>
+    <strong>ClinicalMarket B2B</strong> — Dashboard Retail v8<br>
+    Generado: 16 Abril 2026 · Fuentes: SAP, Power BI, GA4, MailUp, Publitas<br>
+    Ecosistema ClinicalMarket / Gesmed / Profar · Rodrigo Arévalo
+</footer>
+
+<!-- Scroll to Top Button -->
+<button class="scroll-to-top" id="scrollToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
 <!-- ================================ SCRIPTS ================================ -->
 <script>
-// Tab switching
+// Dark mode toggle
+var darkMode = false;
+var themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', function() {
+    darkMode = !darkMode;
+    if (darkMode) {
+        document.body.classList.add('dark');
+        themeToggle.textContent = '☀️';
+    } else {
+        document.body.classList.remove('dark');
+        themeToggle.textContent = '🌙';
+    }
+});
+
+// Scroll to top button visibility
+window.addEventListener('scroll', function() {
+    var btn = document.getElementById('scrollToTop');
+    if (window.scrollY > 300) {
+        btn.classList.add('show');
+    } else {
+        btn.classList.remove('show');
+    }
+});
+
+// URL hash navigation
+window.addEventListener('hashchange', function() {
+    var hash = window.location.hash.substring(1) || 'resumen';
+    showTab(hash);
+});
+
+// Tab switching with hash support
 function showTab(id) {
     document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
     document.querySelectorAll('.nav button').forEach(function(b) { b.classList.remove('active'); });
-    document.getElementById(id).classList.add('active');
-    // Find the clicked button
-    var buttons = document.querySelectorAll('.nav button');
-    for (var i = 0; i < buttons.length; i++) {
-        if (buttons[i] === (event ? event.target : null)) {
-            buttons[i].classList.add('active');
+    var section = document.getElementById(id);
+    if (section) {
+        section.classList.add('active');
+        window.location.hash = id;
+        // Find matching button
+        var buttons = document.querySelectorAll('.nav button');
+        var tabMap = {'resumen': 0, 'comparativo': 1, 'campanas': 2, 'digital': 3, 'mailing': 4, 'productos': 5, 'clientes': 6};
+        if (tabMap[id] !== undefined) {
+            buttons[tabMap[id]].classList.add('active');
         }
+        // Init charts
+        setTimeout(function() { initCharts(); }, 100);
     }
-    // Init charts when tab shown
-    setTimeout(function() { initCharts(); }, 100);
 }
 
 // Generic table text filter — bind to input fields
-function setupFilter(inputId, tableId) {
+function setupFilter(inputId, tableId, rowCountId) {
     var input = document.getElementById(inputId);
     if (!input) return;
     input.addEventListener('input', function() {
         var q = this.value.toLowerCase();
         var rows = document.querySelectorAll('#' + tableId + ' tbody tr');
+        var visibleCount = 0;
         for (var i = 0; i < rows.length; i++) {
-            rows[i].style.display = rows[i].textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
+            var isMatch = rows[i].textContent.toLowerCase().indexOf(q) !== -1;
+            rows[i].style.display = isMatch ? '' : 'none';
+            if (isMatch) visibleCount++;
+        }
+        if (rowCountId) {
+            document.getElementById(rowCountId).textContent = 'Mostrando ' + visibleCount + ' de ' + rows.length;
         }
     });
 }
@@ -1292,6 +1544,20 @@ function exportTable(tableId, filename) {
     link.click();
 }
 
+// KPI value animation with IntersectionObserver
+function animateKPIValues() {
+    var kpis = document.querySelectorAll('.kpi-value');
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting && !entry.target.dataset.animated) {
+                entry.target.dataset.animated = true;
+                // Could add animation logic here if needed
+            }
+        });
+    }, {threshold: 0.5});
+    kpis.forEach(function(kpi) { observer.observe(kpi); });
+}
+
 // ============= CHARTS =============
 var chartsInit = false;
 function initCharts() {
@@ -1311,24 +1577,26 @@ function initCharts() {
     };
 
     // Resumen: Ventas 6m
-    new Chart(document.getElementById('chartVentas6m'), {
-        type: 'line',
-        data: {
-            labels: ["Oct 2025", "Nov 2025", "Dic 2025", "Ene 2026", "Feb 2026", "Mar 2026"],
-            datasets: [{
-                label: 'Ventas ($M)',
-                data: [74, 77, 115, 132, 90, 115],
-                borderColor: C.primary,
-                backgroundColor: C.primary + '22',
-                fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: C.primary
-            }]
-        },
-        options: chartOpts
-    });
+    if (!window.chart_ventas6m && document.getElementById('chartVentas6m')) {
+        window.chart_ventas6m = new Chart(document.getElementById('chartVentas6m'), {
+            type: 'line',
+            data: {
+                labels: ["Oct 2025", "Nov 2025", "Dic 2025", "Ene 2026", "Feb 2026", "Mar 2026"],
+                datasets: [{
+                    label: 'Ventas ($M)',
+                    data: [74, 77, 115, 132, 90, 115],
+                    borderColor: C.primary,
+                    backgroundColor: C.primary + '22',
+                    fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: C.primary
+                }]
+            },
+            options: chartOpts
+        });
+    }
 
     // Resumen: Visitas vs Compras
-    if (document.getElementById('chartVisitasCompras')) {
-        new Chart(document.getElementById('chartVisitasCompras'), {
+    if (!window.chart_visitascompras && document.getElementById('chartVisitasCompras')) {
+        window.chart_visitascompras = new Chart(document.getElementById('chartVisitasCompras'), {
             type: 'bar',
             data: {
                 labels: ["Oct 2025", "Nov 2025", "Dic 2025", "Ene 2026", "Feb 2026", "Mar 2026"],
@@ -1349,8 +1617,8 @@ function initCharts() {
     }
 
     // Campañas: Ventas por mes
-    if (document.getElementById('chartCampVentas')) {
-        new Chart(document.getElementById('chartCampVentas'), {
+    if (!window.chart_campventas && document.getElementById('chartCampVentas')) {
+        window.chart_campventas = new Chart(document.getElementById('chartCampVentas'), {
             type: 'bar',
             data: {
                 labels: ["Oct 2025", "Nov 2025", "Dic 2025", "Ene 2026", "Feb 2026", "Mar 2026"],
@@ -1366,8 +1634,8 @@ function initCharts() {
     }
 
     // Campañas: Unidades + Campañas
-    if (document.getElementById('chartCampUnid')) {
-        new Chart(document.getElementById('chartCampUnid'), {
+    if (!window.chart_campunid && document.getElementById('chartCampUnid')) {
+        window.chart_campunid = new Chart(document.getElementById('chartCampUnid'), {
             type: 'line',
             data: {
                 labels: ["Oct 2025", "Nov 2025", "Dic 2025", "Ene 2026", "Feb 2026", "Mar 2026"],
@@ -1388,10 +1656,10 @@ function initCharts() {
     }
 
     // Pareto
-    if (document.getElementById('chartPareto')) {
+    if (!window.chart_pareto && document.getElementById('chartPareto')) {
         var n = 672;
         var pareto = 187;
-        new Chart(document.getElementById('chartPareto'), {
+        window.chart_pareto = new Chart(document.getElementById('chartPareto'), {
             type: 'doughnut',
             data: {
                 labels: ['Top ' + pareto + ' (80% venta)', 'Resto ' + (n - pareto) + ' (20% venta)'],
@@ -1402,8 +1670,8 @@ function initCharts() {
     }
 
     // SKU estados doughnut
-    if (document.getElementById('chartSKU')) {
-        new Chart(document.getElementById('chartSKU'), {
+    if (!window.chart_sku && document.getElementById('chartSKU')) {
+        window.chart_sku = new Chart(document.getElementById('chartSKU'), {
             type: 'doughnut',
             data: {
                 labels: ['Con Rotación (4,184)', 'Abandonados (2,270)', 'Nunca Vendidos (11,588)'],
@@ -1415,8 +1683,8 @@ function initCharts() {
     }
 
     // SKU bar chart
-    if (document.getElementById('chartSKUBar')) {
-        new Chart(document.getElementById('chartSKUBar'), {
+    if (!window.chart_skubar && document.getElementById('chartSKUBar')) {
+        window.chart_skubar = new Chart(document.getElementById('chartSKUBar'), {
             type: 'bar',
             data: {
                 labels: ['Con Rotación', 'Abandonados', 'Nunca Vendidos', 'Quiebres Stock'],
@@ -1428,8 +1696,8 @@ function initCharts() {
     }
 
     // Digital: Fuente de tráfico
-    if (document.getElementById('chartFuente')) {
-        new Chart(document.getElementById('chartFuente'), {
+    if (!window.chart_fuente && document.getElementById('chartFuente')) {
+        window.chart_fuente = new Chart(document.getElementById('chartFuente'), {
             type: 'doughnut',
             data: {
                 labels: ["B\u00fasqueda Org\u00e1nica (Google)", "Email / MailUp", "Directo (URL)", "Campa\u00f1as Cat\u00e1logo (Publitas)", "Redes Sociales"],
@@ -1440,8 +1708,8 @@ function initCharts() {
     }
 
     // Digital: Visitas vs Compras mensual
-    if (document.getElementById('chartVisMes')) {
-        new Chart(document.getElementById('chartVisMes'), {
+    if (!window.chart_vismes && document.getElementById('chartVisMes')) {
+        window.chart_vismes = new Chart(document.getElementById('chartVisMes'), {
             type: 'bar',
             data: {
                 labels: ["Oct 2025", "Nov 2025", "Dic 2025", "Ene 2026", "Feb 2026", "Mar 2026"],
@@ -1462,8 +1730,8 @@ function initCharts() {
     }
 
     // Digital: Campañas visitas vs clics
-    if (document.getElementById('chartDigCamp')) {
-        new Chart(document.getElementById('chartDigCamp'), {
+    if (!window.chart_digcamp && document.getElementById('chartDigCamp')) {
+        window.chart_digcamp = new Chart(document.getElementById('chartDigCamp'), {
             type: 'bar',
             data: {
                 labels: ["PREP. INVIERNO", "INVIERNO VET", "MES SALUD", "DRAGPHARMA", "MAVER", "GENOMMA", "MARATHON", "ANASAC"],
@@ -1481,8 +1749,8 @@ function initCharts() {
     }
 
     // Digital: Compras por campaña
-    if (document.getElementById('chartDigCompras')) {
-        new Chart(document.getElementById('chartDigCompras'), {
+    if (!window.chart_digcompras && document.getElementById('chartDigCompras')) {
+        window.chart_digcompras = new Chart(document.getElementById('chartDigCompras'), {
             type: 'bar',
             data: {
                 labels: ["PREP. INVIERNO", "INVIERNO VET", "MES SALUD", "DRAGPHARMA", "MAVER", "GENOMMA", "MARATHON", "ANASAC"],
@@ -1495,21 +1763,62 @@ function initCharts() {
             }
         });
     }
+
+    // Mailing: Tasa de apertura por campaña
+    if (!window.chart_mailingtasas && document.getElementById('chartMailingTasas')) {
+        window.chart_mailingtasas = new Chart(document.getElementById('chartMailingTasas'), {
+            type: 'line',
+            data: {
+                labels: ["2026-04-10"],
+                datasets: [{
+                    label: 'Tasa Apertura (%)',
+                    data: [23.26],
+                    borderColor: C.success,
+                    backgroundColor: C.success + '22',
+                    fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: C.success
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true,
+                plugins: { legend: { display: false }, tooltip: { bodyFont: { size: 11 } } },
+                scales: { x: { ticks: { font: { size: 10 } } }, y: { ticks: { font: { size: 10 } } } }
+            }
+        });
+    }
 }
 
 // ============= INIT =============
 document.addEventListener('DOMContentLoaded', function() {
-    // Setup all filters
-    setupFilter('filterSkuComp', 'tblSkuComp');
-    setupFilter('filterInvierno', 'tblInvierno');
-    setupFilter('filterDigCamp', 'tblDigCamp');
-    setupFilter('filterDigProd', 'tblDigProd');
-    setupFilter('filterProdLab', 'tblProdLab');
-    setupFilter('filterClientes', 'tblClientes');
+    // Setup all filters with row count
+    setupFilter('filterSkuComp', 'tblSkuComp', 'rowCountSkuComp');
+    setupFilter('filterInvierno', 'tblInvierno', 'rowCountInvierno');
+    setupFilter('filterDigCamp', 'tblDigCamp', 'rowCountDigCamp');
+    setupFilter('filterDigProd', 'tblDigProd', 'rowCountDigProd');
+    setupFilter('filterProdLab', 'tblProdLab', 'rowCountProdLab');
+    setupFilter('filterClientes', 'tblClientes', 'rowCountClientes');
+    setupFilter('filterMailing', 'tblMailing', 'rowCountMailing');
     setupColFilter('filterVendedor', 'tblClientes', 2);
+
+    // Initialize row counts
+    document.getElementById('rowCountSkuComp').textContent = 'Mostrando 20 de 20';
+    document.getElementById('rowCountInvierno').textContent = 'Mostrando ' + document.querySelectorAll('#tblInvierno tbody tr').length + ' de ' + document.querySelectorAll('#tblInvierno tbody tr').length;
+    document.getElementById('rowCountDigCamp').textContent = 'Mostrando ' + document.querySelectorAll('#tblDigCamp tbody tr').length + ' de ' + document.querySelectorAll('#tblDigCamp tbody tr').length;
+    document.getElementById('rowCountDigProd').textContent = 'Mostrando ' + document.querySelectorAll('#tblDigProd tbody tr').length + ' de ' + document.querySelectorAll('#tblDigProd tbody tr').length;
+    document.getElementById('rowCountProdLab').textContent = 'Mostrando ' + document.querySelectorAll('#tblProdLab tbody tr').length + ' de ' + document.querySelectorAll('#tblProdLab tbody tr').length;
+    document.getElementById('rowCountClientes').textContent = 'Mostrando ' + document.querySelectorAll('#tblClientes tbody tr').length + ' de ' + document.querySelectorAll('#tblClientes tbody tr').length;
+    document.getElementById('rowCountMailing').textContent = 'Mostrando ' + document.querySelectorAll('#tblMailing tbody tr').length + ' de ' + document.querySelectorAll('#tblMailing tbody tr').length;
+
+    // Animate KPI values
+    animateKPIValues();
 
     // Init charts after small delay
     setTimeout(function() { initCharts(); }, 200);
+
+    // Check for URL hash on load
+    var hash = window.location.hash.substring(1);
+    if (hash && hash !== 'resumen') {
+        showTab(hash);
+    }
 });
 </script>
 

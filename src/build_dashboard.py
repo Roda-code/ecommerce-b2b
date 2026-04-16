@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""ClinicalMarket Dashboard v7 — Canal RETAIL
+"""ClinicalMarket Dashboard v8 — Canal RETAIL
 Para el equipo comercial: campañas, visitas, ventas, oportunidades.
-Sin Vendedores ni Laboratorios. Gráficos compactos. Filtros funcionales.
-Digital con desglose real de visitas, catálogos y campañas."""
+Todos los datos se leen desde archivos JSON en /data.
+Flujo mensual: actualizar los JSONs → push → GitHub Actions regenera el dashboard."""
 
 import json, os, textwrap
+from datetime import datetime
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATHS = [
@@ -19,95 +20,47 @@ def find_data():
     raise FileNotFoundError("No se encontró data dir con clientes_data.json")
 
 DATA_DIR = find_data()
-with open(os.path.join(DATA_DIR, 'clientes_data.json')) as f:
-    clientes = json.load(f)
-with open(os.path.join(DATA_DIR, 'comparativo.json')) as f:
-    comp = json.load(f)
-with open(os.path.join(DATA_DIR, 'sku_data.json')) as f:
-    skus = json.load(f)
 
 # ============================================================
-# HARDCODED DATA (to be replaced with real sources later)
+# LOAD ALL DATA FROM JSON FILES
 # ============================================================
+def load_json(filename):
+    path = os.path.join(DATA_DIR, filename)
+    with open(path, encoding='utf-8') as f:
+        return json.load(f)
 
-# Mailing data
+clientes = load_json('clientes_data.json')
+comp = load_json('comparativo.json')
+skus = load_json('sku_data.json')
+meses = load_json('campanas_mensuales.json')
+campanas_digitales = load_json('campanas_digitales.json')
+top_productos_digital = load_json('productos_digital.json')
+
+# GA4 data
+ga4 = load_json('ga4_visitas.json')
+visitas_fuente = ga4['visitas_fuente']
+visitas_mensuales = ga4['visitas_mensuales']
+
+# Mailing — read from mailing.json, use latest entry
+mailing_list = load_json('mailing.json')
+_last_mail = mailing_list[-1] if mailing_list else {}
+# Find sesiones_email from visitas_fuente (Email / MailUp row)
+_sesiones_email = next((f['sesiones'] for f in visitas_fuente if 'email' in f['fuente'].lower() or 'mailup' in f['fuente'].lower()), 0)
 mailing = {
-    "ultima_campana": "Catálogos Abril 2026",
-    "enviados": 3100, "aperturas": 672, "tasa_apertura": 23.26,
-    "clics": 115, "tasa_clic": 3.98, "sesiones_email": 2859
+    "ultima_campana": _last_mail.get("nombre", "—"),
+    "enviados": _last_mail.get("enviados", 0),
+    "aperturas": _last_mail.get("aperturas", 0),
+    "tasa_apertura": _last_mail.get("tasa_apertura", 0),
+    "clics": _last_mail.get("clics", 0),
+    "tasa_clic": _last_mail.get("tasa_clic", 0),
+    "sesiones_email": _sesiones_email,
 }
 
-# Campaign months (from Power BI)
-meses = [
-    {"mes": "Oct 2025", "campanas": 14, "unidades": 45195, "ventas": 73600000},
-    {"mes": "Nov 2025", "campanas": 13, "unidades": 27463, "ventas": 77200000},
-    {"mes": "Dic 2025", "campanas": 14, "unidades": 107457, "ventas": 115400000},
-    {"mes": "Ene 2026", "campanas": 15, "unidades": 58702, "ventas": 132300000},
-    {"mes": "Feb 2026", "campanas": 12, "unidades": 36487, "ventas": 90000000},
-    {"mes": "Mar 2026", "campanas": 8,  "unidades": 40443, "ventas": 115200000},
-]
-
-# Digital / GA4 data — structured for commercial team
-# Visitas por fuente
-visitas_fuente = [
-    {"fuente": "Búsqueda Orgánica (Google)", "sesiones": 4120, "pct": 34.2},
-    {"fuente": "Email / MailUp", "sesiones": 2859, "pct": 23.7},
-    {"fuente": "Directo (URL)", "sesiones": 2680, "pct": 22.2},
-    {"fuente": "Campañas Catálogo (Publitas)", "sesiones": 1540, "pct": 12.8},
-    {"fuente": "Redes Sociales", "sesiones": 860, "pct": 7.1},
-]
-
-# Campañas digitales — clicks en URLs de catálogos
-campanas_digitales = [
-    {"campana": "PREP. INVIERNO", "url_catalogo": "/catalogos/prep-invierno-2026",
-     "visitas_catalogo": 680, "clics_productos": 245, "compras_post_clic": 38,
-     "venta_atribuida": 12400000, "tasa_conversion": 5.6},
-    {"campana": "INVIERNO VET", "url_catalogo": "/catalogos/invierno-vet-2026",
-     "visitas_catalogo": 412, "clics_productos": 156, "compras_post_clic": 22,
-     "venta_atribuida": 5800000, "tasa_conversion": 5.3},
-    {"campana": "MES SALUD", "url_catalogo": "/catalogos/mes-salud-2026",
-     "visitas_catalogo": 285, "clics_productos": 98, "compras_post_clic": 14,
-     "venta_atribuida": 3200000, "tasa_conversion": 4.9},
-    {"campana": "DRAGPHARMA", "url_catalogo": "/catalogos/dragpharma-2026",
-     "visitas_catalogo": 198, "clics_productos": 87, "compras_post_clic": 18,
-     "venta_atribuida": 4100000, "tasa_conversion": 9.1},
-    {"campana": "MAVER", "url_catalogo": "/catalogos/maver-2026",
-     "visitas_catalogo": 165, "clics_productos": 62, "compras_post_clic": 8,
-     "venta_atribuida": 1900000, "tasa_conversion": 4.8},
-    {"campana": "GENOMMA", "url_catalogo": "/catalogos/genomma-2026",
-     "visitas_catalogo": 95, "clics_productos": 41, "compras_post_clic": 6,
-     "venta_atribuida": 900000, "tasa_conversion": 6.3},
-    {"campana": "MARATHON", "url_catalogo": "/catalogos/marathon-2026",
-     "visitas_catalogo": 88, "clics_productos": 34, "compras_post_clic": 5,
-     "venta_atribuida": 700000, "tasa_conversion": 5.7},
-    {"campana": "ANASAC", "url_catalogo": "/catalogos/anasac-2026",
-     "visitas_catalogo": 72, "clics_productos": 28, "compras_post_clic": 4,
-     "venta_atribuida": 500000, "tasa_conversion": 5.6},
-]
-
-# Visitas mensuales al B2B
-visitas_mensuales = [
-    {"mes": "Oct 2025", "visitas_b2b": 9800, "visitas_catalogo": 1420, "compras": 310, "venta_online": 73600000},
-    {"mes": "Nov 2025", "visitas_b2b": 10200, "visitas_catalogo": 1580, "compras": 285, "venta_online": 77200000},
-    {"mes": "Dic 2025", "visitas_b2b": 14500, "visitas_catalogo": 2340, "compras": 520, "venta_online": 115400000},
-    {"mes": "Ene 2026", "visitas_b2b": 13200, "visitas_catalogo": 2100, "compras": 445, "venta_online": 132300000},
-    {"mes": "Feb 2026", "visitas_b2b": 10800, "visitas_catalogo": 1750, "compras": 340, "venta_online": 90000000},
-    {"mes": "Mar 2026", "visitas_b2b": 12050, "visitas_catalogo": 1995, "compras": 395, "venta_online": 115200000},
-]
-
-# Top productos digitales (clics en catálogo → compra)
-top_productos_digital = [
-    {"sku": "SKU-7711", "desc": "Nexgard 28.3mg 1 comp", "campana": "INVIERNO VET", "clics": 89, "compras": 12, "venta": 2100000},
-    {"sku": "SKU-4423", "desc": "Kitadol Migra 10 comp", "campana": "MES SALUD", "clics": 76, "compras": 18, "venta": 1800000},
-    {"sku": "SKU-8891", "desc": "Bravecto 500mg 1 comp", "campana": "INVIERNO VET", "clics": 72, "compras": 9, "venta": 1650000},
-    {"sku": "SKU-3301", "desc": "Abrilar Jarabe 100ml", "campana": "PREP. INVIERNO", "clics": 68, "compras": 15, "venta": 1400000},
-    {"sku": "SKU-5502", "desc": "Naxpet Antiinflamatorio", "campana": "INVIERNO VET", "clics": 64, "compras": 11, "venta": 1350000},
-    {"sku": "SKU-2209", "desc": "Tapsin Día/Noche 18 caps", "campana": "PREP. INVIERNO", "clics": 61, "compras": 22, "venta": 1200000},
-    {"sku": "SKU-6678", "desc": "Vick Vaporub 50g", "campana": "PREP. INVIERNO", "clics": 58, "compras": 28, "venta": 1100000},
-    {"sku": "SKU-1105", "desc": "Flanax 550mg 10 comp", "campana": "GENOMMA", "clics": 55, "compras": 8, "venta": 980000},
-    {"sku": "SKU-9934", "desc": "Drag Pharma Amoxicilina", "campana": "DRAGPHARMA", "clics": 52, "compras": 14, "venta": 920000},
-    {"sku": "SKU-4456", "desc": "Sinagrip Forte 8 sobres", "campana": "PREP. INVIERNO", "clics": 49, "compras": 19, "venta": 870000},
-]
+# Build timestamp (Spanish month names)
+_MESES_ES = {1:'Enero',2:'Febrero',3:'Marzo',4:'Abril',5:'Mayo',6:'Junio',
+             7:'Julio',8:'Agosto',9:'Septiembre',10:'Octubre',11:'Noviembre',12:'Diciembre'}
+_now = datetime.now()
+GENERATED_DATE = f"{_now.day} {_MESES_ES[_now.month]} {_now.year}"
 
 # ============================================================
 # Derived metrics
@@ -135,6 +88,11 @@ total_clics_productos = sum(c['clics_productos'] for c in campanas_digitales)
 total_compras_digital = sum(c['compras_post_clic'] for c in campanas_digitales)
 total_venta_digital = sum(c['venta_atribuida'] for c in campanas_digitales)
 total_visitas_b2b_mar = visitas_mensuales[-1]['visitas_b2b']
+
+# Mailing derived metrics
+avg_tasa_apertura = round(sum(m['tasa_apertura'] for m in mailing_list) / len(mailing_list), 1) if mailing_list else 0
+avg_tasa_clic = round(sum(m['tasa_clic'] for m in mailing_list) / len(mailing_list), 1) if mailing_list else 0
+total_enviados = sum(m['enviados'] for m in mailing_list)
 
 # ============================================================
 # HTML GENERATION
@@ -218,7 +176,6 @@ for c in campanas_digitales:
     conv_color = "#27ae60" if c['tasa_conversion'] >= 5 else "#f39c12" if c['tasa_conversion'] >= 3 else "#e74c3c"
     dig_camp_rows += f"""<tr>
         <td><strong>{c['campana']}</strong></td>
-        <td><code>{c['url_catalogo']}</code></td>
         <td style="text-align:right">{c['visitas_catalogo']:,}</td>
         <td style="text-align:right">{c['clics_productos']:,}</td>
         <td style="text-align:right">{c['compras_post_clic']}</td>
@@ -236,6 +193,19 @@ for p in top_productos_digital:
         <td style="text-align:right">{p['clics']}</td>
         <td style="text-align:right">{p['compras']}</td>
         <td style="text-align:right;font-weight:600">{fmt_clp(p['venta'])}</td>
+    </tr>"""
+
+# Mailing rows
+mailing_rows = ""
+for m in mailing_list:
+    mailing_rows += f"""<tr>
+        <td>{m['fecha']}</td>
+        <td><strong>{m['nombre']}</strong></td>
+        <td style="text-align:right">{m['enviados']:,}</td>
+        <td style="text-align:right">{m['aperturas']:,}</td>
+        <td style="text-align:right;color:#27ae60;font-weight:600">{m['tasa_apertura']}%</td>
+        <td style="text-align:right">{m['clics']:,}</td>
+        <td style="text-align:right;color:#f39c12;font-weight:600">{m['tasa_clic']}%</td>
     </tr>"""
 
 # Products detail rows from SKU data — build top labs summary
@@ -274,6 +244,10 @@ camp_dig_visitas = json.dumps([c['visitas_catalogo'] for c in campanas_digitales
 camp_dig_clics = json.dumps([c['clics_productos'] for c in campanas_digitales])
 camp_dig_compras = json.dumps([c['compras_post_clic'] for c in campanas_digitales])
 
+# Mailing chart data
+mailing_fechas = json.dumps([m['fecha'] for m in mailing_list])
+mailing_tasas = json.dumps([m['tasa_apertura'] for m in mailing_list])
+
 # ============================================================
 # HTML
 # ============================================================
@@ -282,7 +256,7 @@ HTML = f"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClinicalMarket — Dashboard Retail v7</title>
+<title>ClinicalMarket — Dashboard Retail v8</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -297,15 +271,50 @@ HTML = f"""<!DOCTYPE html>
     --text: #2c3e50;
     --muted: #7f8c8d;
     --border: #e8ecf1;
+    --bg-dark: #1a1a2e;
+    --card-dark: #16213e;
+    --text-dark: #e0e0e0;
+    --border-dark: #2a2a4a;
 }}
+
 * {{ margin:0; padding:0; box-sizing:border-box; }}
-body {{ font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text); font-size:14px; }}
+body {{ font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text); font-size:14px; transition:background-color .3s, color .3s; }}
+body.dark {{ background:var(--bg-dark); color:var(--text-dark); }}
 
-.header {{ background:linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%); color:white; padding:20px 28px; }}
-.header h1 {{ font-size:22px; font-weight:800; }}
+.header {{ background:linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%); color:white; padding:20px 28px; display:flex; justify-content:space-between; align-items:center; }}
+.header-left h1 {{ font-size:22px; font-weight:800; }}
 .header-sub {{ font-size:12px; opacity:.85; margin-top:4px; display:flex; gap:20px; flex-wrap:wrap; }}
+.header-right {{ display:flex; gap:10px; align-items:center; }}
 
-.nav {{ background:white; border-bottom:2px solid var(--border); padding:0 20px; display:flex; gap:0; overflow-x:auto; position:sticky; top:0; z-index:100; }}
+.theme-toggle {{
+    background:rgba(255,255,255,.2);
+    border:1px solid rgba(255,255,255,.3);
+    color:white;
+    padding:8px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:16px;
+    transition:all .2s;
+}}
+.theme-toggle:hover {{ background:rgba(255,255,255,.3); }}
+
+.print-btn {{
+    background:rgba(255,255,255,.2);
+    border:1px solid rgba(255,255,255,.3);
+    color:white;
+    padding:8px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:500;
+    transition:all .2s;
+    font-family:inherit;
+}}
+.print-btn:hover {{ background:rgba(255,255,255,.3); }}
+
+.nav {{ background:var(--card); border-bottom:2px solid var(--border); padding:0 20px; display:flex; gap:0; overflow-x:auto; position:sticky; top:0; z-index:100; }}
+body.dark .nav {{ background:var(--card-dark); border-bottom-color:var(--border-dark); }}
+
 .nav button {{ padding:12px 16px; border:none; background:none; font-family:inherit; font-size:12px; font-weight:500; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; white-space:nowrap; transition:all .2s; }}
 .nav button:hover {{ color:var(--text); }}
 .nav button.active {{ color:var(--primary); border-bottom-color:var(--primary); font-weight:600; }}
@@ -314,7 +323,9 @@ body {{ font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text
 .section.active {{ display:block; }}
 
 .kpi-grid {{ display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin:16px 0; }}
-.kpi {{ background:var(--card); border-radius:10px; padding:16px; border-left:4px solid var(--primary); box-shadow:0 1px 3px rgba(0,0,0,.05); }}
+.kpi {{ background:var(--card); border-radius:10px; padding:16px; border-left:4px solid var(--primary); box-shadow:0 1px 3px rgba(0,0,0,.05); transition:all .3s; }}
+body.dark .kpi {{ background:var(--card-dark); box-shadow:0 1px 3px rgba(0,0,0,.3); }}
+
 .kpi-label {{ font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); font-weight:600; }}
 .kpi-value {{ font-size:24px; font-weight:800; color:var(--dark); margin:4px 0 2px; }}
 .kpi-sub {{ font-size:11px; color:var(--muted); }}
@@ -326,18 +337,34 @@ body {{ font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text
 .kpi-red .kpi-value {{ color:var(--danger); }}
 
 .insight {{ background:#fffbeb; border-left:4px solid var(--warning); padding:12px 16px; border-radius:8px; margin:12px 0; font-size:12px; line-height:1.6; }}
+body.dark .insight {{ background:rgba(243, 156, 18, .1); }}
+
 .insight strong {{ color:var(--text); }}
 .insight-blue {{ background:#eef6fd; border-left-color:var(--primary); }}
+body.dark .insight-blue {{ background:rgba(13, 167, 238, .1); }}
 
 .table-wrap {{ background:var(--card); border-radius:10px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.05); margin:12px 0; }}
+body.dark .table-wrap {{ background:var(--card-dark); box-shadow:0 1px 3px rgba(0,0,0,.3); }}
+
 .table-header {{ display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid var(--border); }}
+body.dark .table-header {{ border-bottom-color:var(--border-dark); }}
+
 .table-header h3 {{ font-size:14px; font-weight:600; }}
+.row-count {{ font-size:11px; color:var(--muted); }}
+
 table {{ width:100%; border-collapse:collapse; font-size:12px; }}
 th {{ background:#f8f9fb; padding:8px 12px; text-align:left; font-weight:600; font-size:10px; text-transform:uppercase; letter-spacing:.3px; color:var(--muted); border-bottom:1px solid var(--border); }}
+body.dark th {{ background:var(--border-dark); color:var(--muted); }}
+
 td {{ padding:8px 12px; border-bottom:1px solid #f2f4f7; }}
+body.dark td {{ border-bottom-color:var(--border-dark); }}
+
 tr:hover {{ background:#fafbfd; }}
+body.dark tr:hover {{ background:rgba(255,255,255,.05); }}
 
 .chart-box {{ background:var(--card); border-radius:10px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.05); margin:12px 0; }}
+body.dark .chart-box {{ background:var(--card-dark); box-shadow:0 1px 3px rgba(0,0,0,.3); }}
+
 .chart-box h3 {{ font-size:13px; font-weight:600; margin-bottom:8px; }}
 .chart-row {{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }}
 @media(max-width:900px) {{ .chart-row {{ grid-template-columns:1fr; }} }}
@@ -348,10 +375,14 @@ tr:hover {{ background:#fafbfd; }}
 
 .btn {{ display:inline-flex; align-items:center; gap:5px; padding:6px 12px; border-radius:6px; border:1px solid var(--border); background:white; font-family:inherit; font-size:11px; font-weight:500; cursor:pointer; color:var(--text); transition:all .2s; }}
 .btn:hover {{ background:var(--primary); color:white; border-color:var(--primary); }}
+body.dark .btn {{ background:var(--card-dark); border-color:var(--border-dark); color:var(--text-dark); }}
+body.dark .btn:hover {{ background:var(--primary); color:white; border-color:var(--primary); }}
 
 .filter-bar {{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:10px 0; }}
-.filter-bar input {{ padding:7px 12px; border:1px solid var(--border); border-radius:6px; font-family:inherit; font-size:12px; width:260px; }}
-.filter-bar select {{ padding:7px 12px; border:1px solid var(--border); border-radius:6px; font-family:inherit; font-size:12px; }}
+.filter-bar input {{ padding:7px 12px; border:1px solid var(--border); border-radius:6px; font-family:inherit; font-size:12px; width:260px; background:var(--card); color:var(--text); }}
+.filter-bar select {{ padding:7px 12px; border:1px solid var(--border); border-radius:6px; font-family:inherit; font-size:12px; background:var(--card); color:var(--text); }}
+body.dark .filter-bar input {{ background:var(--card-dark); border-color:var(--border-dark); color:var(--text-dark); }}
+body.dark .filter-bar select {{ background:var(--card-dark); border-color:var(--border-dark); color:var(--text-dark); }}
 
 .funnel {{ display:flex; gap:0; align-items:stretch; margin:16px 0; }}
 .funnel-step {{ flex:1; text-align:center; padding:12px 6px; position:relative; }}
@@ -363,17 +394,65 @@ tr:hover {{ background:#fafbfd; }}
 .grid-3 {{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }}
 @media(max-width:900px) {{ .grid-3 {{ grid-template-columns:1fr; }} }}
 
-@media print {{ .nav, .btn, .filter-bar {{ display:none; }} .section {{ display:block !important; }} }}
+.alerts-box {{ background:var(--card); border-radius:10px; padding:16px; margin:12px 0; border-left:4px solid var(--success); box-shadow:0 1px 3px rgba(0,0,0,.05); }}
+body.dark .alerts-box {{ background:var(--card-dark); box-shadow:0 1px 3px rgba(0,0,0,.3); }}
+
+.alert-item {{ padding:8px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; font-size:12px; }}
+body.dark .alert-item {{ border-bottom-color:var(--border-dark); }}
+
+.alert-item:last-child {{ border-bottom:none; }}
+.alert-item strong {{ color:var(--dark); }}
+
+.vendor-bar {{ display:flex; gap:8px; margin:8px 0; }}
+.vendor-item {{ flex:1; text-align:center; padding:8px; background:#f8f9fb; border-radius:6px; font-size:11px; }}
+body.dark .vendor-item {{ background:var(--border-dark); }}
+
+.scroll-to-top {{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:40px;
+    height:40px;
+    background:var(--primary);
+    color:white;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    box-shadow:0 4px 8px rgba(0,0,0,.2);
+    transition:all .3s;
+    z-index:999;
+}}
+.scroll-to-top:hover {{ transform:translateY(-3px); box-shadow:0 6px 12px rgba(0,0,0,.3); }}
+.scroll-to-top.show {{ display:flex; }}
+
+footer {{ background:#2c3e50; color:rgba(255,255,255,.7); padding:16px 28px; text-align:center; font-size:11px; margin-top:20px; }}
+body.dark footer {{ background:#0f0f1e; }}
+
+footer strong {{ color:white; }}
+footer a {{ color:var(--primary); text-decoration:none; }}
+footer a:hover {{ text-decoration:underline; }}
+
+@media print {{ .nav, .btn, .filter-bar, footer, .theme-toggle, .print-btn, .scroll-to-top {{ display:none; }} .section {{ display:block !important; }} }}
 </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>ClinicalMarket B2B — Dashboard Retail v7</h1>
-    <div class="header-sub">
-        <span>Canal retail: farmacias, droguerías, pet shops, veterinarias</span>
-        <span>Generado: 13 Abril 2026</span>
-        <span>Fuentes: SAP · Power BI · GA4 · MailUp · Publitas</span>
+    <div class="header-left">
+        <h1>ClinicalMarket B2B — Dashboard Retail v8</h1>
+        <div class="header-sub">
+            <span>Canal retail: farmacias, droguerías, pet shops, veterinarias</span>
+            <span>Generado: {GENERATED_DATE}</span>
+            <span>Fuentes: SAP · Power BI · GA4 · MailUp · Publitas</span>
+        </div>
+    </div>
+    <div class="header-right">
+        <button class="theme-toggle" id="themeToggle" title="Alternar modo oscuro">🌙</button>
+        <button class="print-btn" onclick="window.print()" title="Imprimir dashboard">🖨 Imprimir</button>
     </div>
 </div>
 
@@ -382,6 +461,7 @@ tr:hover {{ background:#fafbfd; }}
     <button onclick="showTab('comparativo')">Comparativo</button>
     <button onclick="showTab('campanas')">Campañas</button>
     <button onclick="showTab('digital')">Digital</button>
+    <button onclick="showTab('mailing')">Mailing</button>
     <button onclick="showTab('productos')">Productos</button>
     <button onclick="showTab('clientes')">Clientes</button>
 </div>
@@ -398,7 +478,7 @@ tr:hover {{ background:#fafbfd; }}
         <div class="kpi">
             <div class="kpi-label">Venta Marzo 2026</div>
             <div class="kpi-value">{fmt_clp(venta_26)}</div>
-            <div class="kpi-sub"><span style="color:{'var(--success)' if crec_venta > 0 else 'var(--danger)'}">{'▲' if crec_venta > 0 else '▼'} {crec_venta}%</span> vs Mar 2025 · <span class="badge">SAP</span></div>
+            <div class="kpi-sub"><span style="color:{{'var(--success)' if crec_venta > 0 else 'var(--danger)'}}">{{'▲' if crec_venta > 0 else '▼'}} {crec_venta}%</span> vs Mar 2025 · <span class="badge">SAP</span></div>
         </div>
         <div class="kpi kpi-green">
             <div class="kpi-label">Margen Bruto</div>
@@ -466,14 +546,14 @@ tr:hover {{ background:#fafbfd; }}
     <div class="insight">Mismo mes, distinto año. Así se ve el crecimiento real sin estacionalidad.</div>
 
     <div class="kpi-grid">
-        <div class="kpi {'kpi-green' if crec_venta > 0 else 'kpi-red'}">
+        <div class="kpi {{'kpi-green' if crec_venta > 0 else 'kpi-red'}}">
             <div class="kpi-label">Cambio en Venta</div>
-            <div class="kpi-value">{'▲' if crec_venta > 0 else '▼'} {crec_venta}%</div>
+            <div class="kpi-value">{{'▲' if crec_venta > 0 else '▼'}} {crec_venta}%</div>
             <div class="kpi-sub">{fmt_clp(venta_25)} → {fmt_clp(venta_26)}</div>
         </div>
-        <div class="kpi {'kpi-red' if crec_unid < 0 else 'kpi-green'}">
+        <div class="kpi {{'kpi-red' if crec_unid < 0 else 'kpi-green'}}">
             <div class="kpi-label">Cambio en Unidades</div>
-            <div class="kpi-value">{'▲' if crec_unid > 0 else '▼'} {crec_unid}%</div>
+            <div class="kpi-value">{{'▲' if crec_unid > 0 else '▼'}} {crec_unid}%</div>
             <div class="kpi-sub">{unid_25:,} → {unid_26:,}</div>
         </div>
         <div class="kpi kpi-green">
@@ -512,6 +592,7 @@ tr:hover {{ background:#fafbfd; }}
         </div>
         <div class="filter-bar">
             <input type="text" placeholder="Buscar SKU o descripción..." id="filterSkuComp">
+            <span class="row-count" id="rowCountSkuComp"></span>
         </div>
         <table id="tblSkuComp">
             <thead><tr><th>SKU</th><th>Descripción</th><th>Campaña</th><th>Venta 2025</th><th>Venta 2026</th><th>Crec.</th></tr></thead>
@@ -569,6 +650,7 @@ tr:hover {{ background:#fafbfd; }}
         </div>
         <div class="filter-bar">
             <input type="text" placeholder="Buscar producto..." id="filterInvierno">
+            <span class="row-count" id="rowCountInvierno"></span>
         </div>
         <table id="tblInvierno">
             <thead><tr><th>SKU</th><th>Producto</th><th>Segmento</th><th>Venta Feb</th><th>Venta Mar</th><th>Crec. Feb→Mar</th></tr></thead>
@@ -668,10 +750,11 @@ tr:hover {{ background:#fafbfd; }}
         </div>
         <div class="filter-bar">
             <input type="text" placeholder="Buscar campaña..." id="filterDigCamp">
+            <span class="row-count" id="rowCountDigCamp"></span>
         </div>
         <table id="tblDigCamp">
             <thead><tr>
-                <th>Campaña</th><th>URL Catálogo</th><th style="text-align:right">Visitas</th>
+                <th>Campaña</th><th style="text-align:right">Visitas</th>
                 <th style="text-align:right">Clics Productos</th><th style="text-align:right">Compras</th>
                 <th style="text-align:right">Venta</th><th style="text-align:right">% Conversión</th>
             </tr></thead>
@@ -698,6 +781,7 @@ tr:hover {{ background:#fafbfd; }}
         </div>
         <div class="filter-bar">
             <input type="text" placeholder="Buscar producto o campaña..." id="filterDigProd">
+            <span class="row-count" id="rowCountDigProd"></span>
         </div>
         <table id="tblDigProd">
             <thead><tr><th>SKU</th><th>Producto</th><th>Campaña</th><th style="text-align:right">Clics</th><th style="text-align:right">Compras</th><th style="text-align:right">Venta</th></tr></thead>
@@ -724,6 +808,66 @@ tr:hover {{ background:#fafbfd; }}
         — <strong>Dragpharma</strong> tiene la mayor tasa de conversión ({campanas_digitales[3]['tasa_conversion']}%) con menos visitas — el tráfico que llega es más calificado.<br>
         — <strong>Prep. Invierno</strong> lidera en volumen: {campanas_digitales[0]['visitas_catalogo']} visitas y {fmt_clp(campanas_digitales[0]['venta_atribuida'])} en ventas.<br>
         — El email sigue siendo el 2do canal más fuerte ({mailing['sesiones_email']:,} sesiones). Mejorar la tasa de clic (hoy {mailing['tasa_clic']}%) amplificaría el impacto.
+    </div>
+</div>
+
+<!-- ================================ MAILING ================================ -->
+<div class="section" id="mailing">
+    <h2 style="font-size:16px">Email Marketing — Campañas y Rendimiento</h2>
+    <div class="insight">
+        <strong>¿Qué ves aquí?</strong> Historial completo de campañas de email, tasa de apertura, clics y engagement.
+        Los datos vienen de MailUp. Cada campaña es monitoreada para entender qué mensajes resuenan mejor con tu audiencia.
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi">
+            <div class="kpi-label">Total Enviados</div>
+            <div class="kpi-value">{total_enviados:,}</div>
+            <div class="kpi-sub">Últimas {len(mailing_list)} campañas</div>
+        </div>
+        <div class="kpi kpi-green">
+            <div class="kpi-label">Promedio Apertura</div>
+            <div class="kpi-value">{avg_tasa_apertura}%</div>
+            <div class="kpi-sub">Tasa de apertura promedio</div>
+        </div>
+        <div class="kpi kpi-orange">
+            <div class="kpi-label">Promedio Clics</div>
+            <div class="kpi-value">{avg_tasa_clic}%</div>
+            <div class="kpi-sub">Tasa de clic promedio</div>
+        </div>
+        <div class="kpi">
+            <div class="kpi-label">Última Campaña</div>
+            <div class="kpi-value">{mailing['ultima_campana']}</div>
+            <div class="kpi-sub">{mailing['enviados']:,} envíos · {mailing['tasa_apertura']}% apertura</div>
+        </div>
+    </div>
+
+    <div class="chart-box">
+        <h3>Tasa de Apertura por Campaña</h3>
+        <canvas id="chartMailingTasas" height="140"></canvas>
+    </div>
+
+    <div class="table-wrap">
+        <div class="table-header">
+            <h3>Historial de Campañas</h3>
+            <button class="btn" onclick="exportTable('tblMailing','mailing_campanas.csv')">Exportar CSV</button>
+        </div>
+        <div class="filter-bar">
+            <input type="text" placeholder="Buscar campaña..." id="filterMailing">
+            <span class="row-count" id="rowCountMailing"></span>
+        </div>
+        <table id="tblMailing">
+            <thead><tr><th>Fecha</th><th>Campaña</th><th style="text-align:right">Enviados</th><th style="text-align:right">Aperturas</th><th style="text-align:right">% Apertura</th><th style="text-align:right">Clics</th><th style="text-align:right">% Clics</th></tr></thead>
+            <tbody>{mailing_rows}</tbody>
+        </table>
+    </div>
+
+    <div class="insight-blue insight">
+        <strong>Recomendaciones:</strong><br>
+        — La tasa de apertura promedio es {avg_tasa_apertura}%. Campañas con asunto corto y personalizadas tienden a superar este promedio.<br>
+        — La tasa de clic promedio es {avg_tasa_clic}%. Mejorar el CTA (call-to-action) y la relevancia del contenido puede aumentar este indicador.<br>
+        — Monitorear las campañas que superan ambos promedios para identificar patrones en asunto, horario de envío y segmentación.<br>
+        — Considerar A/B testing en asuntos y contenido para optimizar engagement.
     </div>
 </div>
 
@@ -776,6 +920,7 @@ tr:hover {{ background:#fafbfd; }}
         </div>
         <div class="filter-bar">
             <input type="text" placeholder="Buscar laboratorio..." id="filterProdLab">
+            <span class="row-count" id="rowCountProdLab"></span>
         </div>
         <table id="tblProdLab">
             <thead><tr><th>Laboratorio</th><th style="text-align:right">SKUs</th><th style="text-align:right">Rotación 3M (unid)</th><th style="text-align:right">Rotación/SKU</th></tr></thead>
@@ -814,6 +959,37 @@ tr:hover {{ background:#fafbfd; }}
         </div>
     </div>
 
+    <div class="alerts-box">
+        <h3 style="font-size:13px;margin-bottom:12px;color:var(--dark)">Top 5 Clientes Estratégicos (Pareto)</h3>
+        <div class="alert-item" style="padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--border)">
+            <strong>{clientes['top50'][0]['nombre']}</strong>
+            <span style="color:var(--success)">{fmt_clp(clientes['top50'][0]['venta_total'])}</span>
+        </div>
+        <div class="alert-item" style="padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--border)">
+            <strong>{clientes['top50'][1]['nombre']}</strong>
+            <span style="color:var(--success)">{fmt_clp(clientes['top50'][1]['venta_total'])}</span>
+        </div>
+        <div class="alert-item" style="padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--border)">
+            <strong>{clientes['top50'][2]['nombre']}</strong>
+            <span style="color:var(--success)">{fmt_clp(clientes['top50'][2]['venta_total'])}</span>
+        </div>
+        <div class="alert-item" style="padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid var(--border)">
+            <strong>{clientes['top50'][3]['nombre']}</strong>
+            <span style="color:var(--success)">{fmt_clp(clientes['top50'][3]['venta_total'])}</span>
+        </div>
+        <div class="alert-item">
+            <strong>{clientes['top50'][4]['nombre']}</strong>
+            <span style="color:var(--success)">{fmt_clp(clientes['top50'][4]['venta_total'])}</span>
+        </div>
+    </div>
+
+    <div class="alerts-box">
+        <h3 style="font-size:13px;margin-bottom:12px;color:var(--dark)">Distribución por Vendedor</h3>
+        <div class="vendor-bar">
+            {''.join(f'<div class="vendor-item"><div style="font-weight:600">{len([c for c in clientes["top50"] if c["vendedor"] == v["nombre"]])}</div><div>{v["nombre"]}</div></div>' for v in clientes['vendedores'][:5])}
+        </div>
+    </div>
+
     <div class="chart-box">
         <h3>Distribución Pareto</h3>
         <canvas id="chartPareto" height="120"></canvas>
@@ -830,6 +1006,7 @@ tr:hover {{ background:#fafbfd; }}
                 <option value="">Todos los vendedores</option>
                 {''.join(f'<option value="{v["nombre"]}">{v["nombre"]}</option>' for v in clientes['vendedores'])}
             </select>
+            <span class="row-count" id="rowCountClientes"></span>
         </div>
         <table id="tblClientes">
             <thead><tr><th>#</th><th>Cliente</th><th>Vendedor</th><th style="text-align:right">Venta Total</th><th>% Total</th></tr></thead>
@@ -838,33 +1015,82 @@ tr:hover {{ background:#fafbfd; }}
     </div>
 </div>
 
+<!-- ================================ FOOTER ================================ -->
+<footer>
+    <strong>ClinicalMarket B2B</strong> — Dashboard Retail v8<br>
+    Generado: {GENERATED_DATE} · Fuentes: SAP, Power BI, GA4, MailUp, Publitas<br>
+    Ecosistema ClinicalMarket / Gesmed / Profar · Rodrigo Arévalo
+</footer>
+
+<!-- Scroll to Top Button -->
+<button class="scroll-to-top" id="scrollToTop" onclick="window.scrollTo({{top:0,behavior:'smooth'}})">↑</button>
+
 <!-- ================================ SCRIPTS ================================ -->
 <script>
-// Tab switching
+// Dark mode toggle
+var darkMode = false;
+var themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', function() {{
+    darkMode = !darkMode;
+    if (darkMode) {{
+        document.body.classList.add('dark');
+        themeToggle.textContent = '☀️';
+    }} else {{
+        document.body.classList.remove('dark');
+        themeToggle.textContent = '🌙';
+    }}
+}});
+
+// Scroll to top button visibility
+window.addEventListener('scroll', function() {{
+    var btn = document.getElementById('scrollToTop');
+    if (window.scrollY > 300) {{
+        btn.classList.add('show');
+    }} else {{
+        btn.classList.remove('show');
+    }}
+}});
+
+// URL hash navigation
+window.addEventListener('hashchange', function() {{
+    var hash = window.location.hash.substring(1) || 'resumen';
+    showTab(hash);
+}});
+
+// Tab switching with hash support
 function showTab(id) {{
     document.querySelectorAll('.section').forEach(function(s) {{ s.classList.remove('active'); }});
     document.querySelectorAll('.nav button').forEach(function(b) {{ b.classList.remove('active'); }});
-    document.getElementById(id).classList.add('active');
-    // Find the clicked button
-    var buttons = document.querySelectorAll('.nav button');
-    for (var i = 0; i < buttons.length; i++) {{
-        if (buttons[i] === (event ? event.target : null)) {{
-            buttons[i].classList.add('active');
+    var section = document.getElementById(id);
+    if (section) {{
+        section.classList.add('active');
+        window.location.hash = id;
+        // Find matching button
+        var buttons = document.querySelectorAll('.nav button');
+        var tabMap = {{'resumen': 0, 'comparativo': 1, 'campanas': 2, 'digital': 3, 'mailing': 4, 'productos': 5, 'clientes': 6}};
+        if (tabMap[id] !== undefined) {{
+            buttons[tabMap[id]].classList.add('active');
         }}
+        // Init charts
+        setTimeout(function() {{ initCharts(); }}, 100);
     }}
-    // Init charts when tab shown
-    setTimeout(function() {{ initCharts(); }}, 100);
 }}
 
 // Generic table text filter — bind to input fields
-function setupFilter(inputId, tableId) {{
+function setupFilter(inputId, tableId, rowCountId) {{
     var input = document.getElementById(inputId);
     if (!input) return;
     input.addEventListener('input', function() {{
         var q = this.value.toLowerCase();
         var rows = document.querySelectorAll('#' + tableId + ' tbody tr');
+        var visibleCount = 0;
         for (var i = 0; i < rows.length; i++) {{
-            rows[i].style.display = rows[i].textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
+            var isMatch = rows[i].textContent.toLowerCase().indexOf(q) !== -1;
+            rows[i].style.display = isMatch ? '' : 'none';
+            if (isMatch) visibleCount++;
+        }}
+        if (rowCountId) {{
+            document.getElementById(rowCountId).textContent = 'Mostrando ' + visibleCount + ' de ' + rows.length;
         }}
     }});
 }}
@@ -906,6 +1132,20 @@ function exportTable(tableId, filename) {{
     link.click();
 }}
 
+// KPI value animation with IntersectionObserver
+function animateKPIValues() {{
+    var kpis = document.querySelectorAll('.kpi-value');
+    var observer = new IntersectionObserver(function(entries) {{
+        entries.forEach(function(entry) {{
+            if (entry.isIntersecting && !entry.target.dataset.animated) {{
+                entry.target.dataset.animated = true;
+                // Could add animation logic here if needed
+            }}
+        }});
+    }}, {{threshold: 0.5}});
+    kpis.forEach(function(kpi) {{ observer.observe(kpi); }});
+}}
+
 // ============= CHARTS =============
 var chartsInit = false;
 function initCharts() {{
@@ -925,24 +1165,26 @@ function initCharts() {{
     }};
 
     // Resumen: Ventas 6m
-    new Chart(document.getElementById('chartVentas6m'), {{
-        type: 'line',
-        data: {{
-            labels: {month_labels},
-            datasets: [{{
-                label: 'Ventas ($M)',
-                data: {month_ventas},
-                borderColor: C.primary,
-                backgroundColor: C.primary + '22',
-                fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: C.primary
-            }}]
-        }},
-        options: chartOpts
-    }});
+    if (!window.chart_ventas6m && document.getElementById('chartVentas6m')) {{
+        window.chart_ventas6m = new Chart(document.getElementById('chartVentas6m'), {{
+            type: 'line',
+            data: {{
+                labels: {month_labels},
+                datasets: [{{
+                    label: 'Ventas ($M)',
+                    data: {month_ventas},
+                    borderColor: C.primary,
+                    backgroundColor: C.primary + '22',
+                    fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: C.primary
+                }}]
+            }},
+            options: chartOpts
+        }});
+    }}
 
     // Resumen: Visitas vs Compras
-    if (document.getElementById('chartVisitasCompras')) {{
-        new Chart(document.getElementById('chartVisitasCompras'), {{
+    if (!window.chart_visitascompras && document.getElementById('chartVisitasCompras')) {{
+        window.chart_visitascompras = new Chart(document.getElementById('chartVisitasCompras'), {{
             type: 'bar',
             data: {{
                 labels: {vis_mes_labels},
@@ -963,8 +1205,8 @@ function initCharts() {{
     }}
 
     // Campañas: Ventas por mes
-    if (document.getElementById('chartCampVentas')) {{
-        new Chart(document.getElementById('chartCampVentas'), {{
+    if (!window.chart_campventas && document.getElementById('chartCampVentas')) {{
+        window.chart_campventas = new Chart(document.getElementById('chartCampVentas'), {{
             type: 'bar',
             data: {{
                 labels: {month_labels},
@@ -980,8 +1222,8 @@ function initCharts() {{
     }}
 
     // Campañas: Unidades + Campañas
-    if (document.getElementById('chartCampUnid')) {{
-        new Chart(document.getElementById('chartCampUnid'), {{
+    if (!window.chart_campunid && document.getElementById('chartCampUnid')) {{
+        window.chart_campunid = new Chart(document.getElementById('chartCampUnid'), {{
             type: 'line',
             data: {{
                 labels: {month_labels},
@@ -1002,10 +1244,10 @@ function initCharts() {{
     }}
 
     // Pareto
-    if (document.getElementById('chartPareto')) {{
+    if (!window.chart_pareto && document.getElementById('chartPareto')) {{
         var n = {clientes['total_clientes']};
         var pareto = {clientes['pareto_n80']};
-        new Chart(document.getElementById('chartPareto'), {{
+        window.chart_pareto = new Chart(document.getElementById('chartPareto'), {{
             type: 'doughnut',
             data: {{
                 labels: ['Top ' + pareto + ' (80% venta)', 'Resto ' + (n - pareto) + ' (20% venta)'],
@@ -1016,8 +1258,8 @@ function initCharts() {{
     }}
 
     // SKU estados doughnut
-    if (document.getElementById('chartSKU')) {{
-        new Chart(document.getElementById('chartSKU'), {{
+    if (!window.chart_sku && document.getElementById('chartSKU')) {{
+        window.chart_sku = new Chart(document.getElementById('chartSKU'), {{
             type: 'doughnut',
             data: {{
                 labels: ['Con Rotación ({skus["estados"].get("Con Rotación",0):,})', 'Abandonados ({skus["estados"].get("Abandonados",0):,})', 'Nunca Vendidos ({skus["estados"].get("Nunca Rotados",0):,})'],
@@ -1029,8 +1271,8 @@ function initCharts() {{
     }}
 
     // SKU bar chart
-    if (document.getElementById('chartSKUBar')) {{
-        new Chart(document.getElementById('chartSKUBar'), {{
+    if (!window.chart_skubar && document.getElementById('chartSKUBar')) {{
+        window.chart_skubar = new Chart(document.getElementById('chartSKUBar'), {{
             type: 'bar',
             data: {{
                 labels: ['Con Rotación', 'Abandonados', 'Nunca Vendidos', 'Quiebres Stock'],
@@ -1042,8 +1284,8 @@ function initCharts() {{
     }}
 
     // Digital: Fuente de tráfico
-    if (document.getElementById('chartFuente')) {{
-        new Chart(document.getElementById('chartFuente'), {{
+    if (!window.chart_fuente && document.getElementById('chartFuente')) {{
+        window.chart_fuente = new Chart(document.getElementById('chartFuente'), {{
             type: 'doughnut',
             data: {{
                 labels: {fuente_labels},
@@ -1054,8 +1296,8 @@ function initCharts() {{
     }}
 
     // Digital: Visitas vs Compras mensual
-    if (document.getElementById('chartVisMes')) {{
-        new Chart(document.getElementById('chartVisMes'), {{
+    if (!window.chart_vismes && document.getElementById('chartVisMes')) {{
+        window.chart_vismes = new Chart(document.getElementById('chartVisMes'), {{
             type: 'bar',
             data: {{
                 labels: {vis_mes_labels},
@@ -1076,8 +1318,8 @@ function initCharts() {{
     }}
 
     // Digital: Campañas visitas vs clics
-    if (document.getElementById('chartDigCamp')) {{
-        new Chart(document.getElementById('chartDigCamp'), {{
+    if (!window.chart_digcamp && document.getElementById('chartDigCamp')) {{
+        window.chart_digcamp = new Chart(document.getElementById('chartDigCamp'), {{
             type: 'bar',
             data: {{
                 labels: {camp_dig_labels},
@@ -1095,8 +1337,8 @@ function initCharts() {{
     }}
 
     // Digital: Compras por campaña
-    if (document.getElementById('chartDigCompras')) {{
-        new Chart(document.getElementById('chartDigCompras'), {{
+    if (!window.chart_digcompras && document.getElementById('chartDigCompras')) {{
+        window.chart_digcompras = new Chart(document.getElementById('chartDigCompras'), {{
             type: 'bar',
             data: {{
                 labels: {camp_dig_labels},
@@ -1109,21 +1351,62 @@ function initCharts() {{
             }}
         }});
     }}
+
+    // Mailing: Tasa de apertura por campaña
+    if (!window.chart_mailingtasas && document.getElementById('chartMailingTasas')) {{
+        window.chart_mailingtasas = new Chart(document.getElementById('chartMailingTasas'), {{
+            type: 'line',
+            data: {{
+                labels: {mailing_fechas},
+                datasets: [{{
+                    label: 'Tasa Apertura (%)',
+                    data: {mailing_tasas},
+                    borderColor: C.success,
+                    backgroundColor: C.success + '22',
+                    fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: C.success
+                }}]
+            }},
+            options: {{
+                responsive: true, maintainAspectRatio: true,
+                plugins: {{ legend: {{ display: false }}, tooltip: {{ bodyFont: {{ size: 11 }} }} }},
+                scales: {{ x: {{ ticks: {{ font: {{ size: 10 }} }} }}, y: {{ ticks: {{ font: {{ size: 10 }} }} }} }}
+            }}
+        }});
+    }}
 }}
 
 // ============= INIT =============
 document.addEventListener('DOMContentLoaded', function() {{
-    // Setup all filters
-    setupFilter('filterSkuComp', 'tblSkuComp');
-    setupFilter('filterInvierno', 'tblInvierno');
-    setupFilter('filterDigCamp', 'tblDigCamp');
-    setupFilter('filterDigProd', 'tblDigProd');
-    setupFilter('filterProdLab', 'tblProdLab');
-    setupFilter('filterClientes', 'tblClientes');
+    // Setup all filters with row count
+    setupFilter('filterSkuComp', 'tblSkuComp', 'rowCountSkuComp');
+    setupFilter('filterInvierno', 'tblInvierno', 'rowCountInvierno');
+    setupFilter('filterDigCamp', 'tblDigCamp', 'rowCountDigCamp');
+    setupFilter('filterDigProd', 'tblDigProd', 'rowCountDigProd');
+    setupFilter('filterProdLab', 'tblProdLab', 'rowCountProdLab');
+    setupFilter('filterClientes', 'tblClientes', 'rowCountClientes');
+    setupFilter('filterMailing', 'tblMailing', 'rowCountMailing');
     setupColFilter('filterVendedor', 'tblClientes', 2);
+
+    // Initialize row counts
+    document.getElementById('rowCountSkuComp').textContent = 'Mostrando 20 de 20';
+    document.getElementById('rowCountInvierno').textContent = 'Mostrando ' + document.querySelectorAll('#tblInvierno tbody tr').length + ' de ' + document.querySelectorAll('#tblInvierno tbody tr').length;
+    document.getElementById('rowCountDigCamp').textContent = 'Mostrando ' + document.querySelectorAll('#tblDigCamp tbody tr').length + ' de ' + document.querySelectorAll('#tblDigCamp tbody tr').length;
+    document.getElementById('rowCountDigProd').textContent = 'Mostrando ' + document.querySelectorAll('#tblDigProd tbody tr').length + ' de ' + document.querySelectorAll('#tblDigProd tbody tr').length;
+    document.getElementById('rowCountProdLab').textContent = 'Mostrando ' + document.querySelectorAll('#tblProdLab tbody tr').length + ' de ' + document.querySelectorAll('#tblProdLab tbody tr').length;
+    document.getElementById('rowCountClientes').textContent = 'Mostrando ' + document.querySelectorAll('#tblClientes tbody tr').length + ' de ' + document.querySelectorAll('#tblClientes tbody tr').length;
+    document.getElementById('rowCountMailing').textContent = 'Mostrando ' + document.querySelectorAll('#tblMailing tbody tr').length + ' de ' + document.querySelectorAll('#tblMailing tbody tr').length;
+
+    // Animate KPI values
+    animateKPIValues();
 
     // Init charts after small delay
     setTimeout(function() {{ initCharts(); }}, 200);
+
+    // Check for URL hash on load
+    var hash = window.location.hash.substring(1);
+    if (hash && hash !== 'resumen') {{
+        showTab(hash);
+    }}
 }});
 </script>
 
@@ -1138,5 +1421,6 @@ output = os.path.join(DOCS_DIR, 'index.html')
 with open(output, 'w', encoding='utf-8') as f:
     f.write(HTML)
 
-print(f"Dashboard v7: {output}")
+print(f"Dashboard v8: {output}")
 print(f"Size: {len(HTML)/1024:.1f} KB, {HTML.count(chr(10))} lines")
+print(f"Data sources: clientes_data, comparativo, sku_data, campanas_mensuales, ga4_visitas, campanas_digitales, productos_digital, mailing")

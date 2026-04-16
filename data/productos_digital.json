@@ -1,0 +1,12 @@
+[
+    {"sku": "SKU-7711", "desc": "Nexgard 28.3mg 1 comp", "campana": "INVIERNO VET", "clics": 89, "compras": 12, "venta": 2100000},
+    {"sku": "SKU-4423", "desc": "Kitadol Migra 10 comp", "campana": "MES SALUD", "clics": 76, "compras": 18, "venta": 1800000},
+    {"sku": "SKU-8891", "desc": "Bravecto 500mg 1 comp", "campana": "INVIERNO VET", "clics": 72, "compras": 9, "venta": 1650000},
+    {"sku": "SKU-3301", "desc": "Abrilar Jarabe 100ml", "campana": "PREP. INVIERNO", "clics": 68, "compras": 15, "venta": 1400000},
+    {"sku": "SKU-5502", "desc": "Naxpet Antiinflamatorio", "campana": "INVIERNO VET", "clics": 64, "compras": 11, "venta": 1350000},
+    {"sku": "SKU-2209", "desc": "Tapsin Día/Noche 18 caps", "campana": "PREP. INVIERNO", "clics": 61, "compras": 22, "venta": 1200000},
+    {"sku": "SKU-6678", "desc": "Vick Vaporub 50g", "campana": "PREP. INVIERNO", "clics": 58, "compras": 28, "venta": 1100000},
+    {"sku": "SKU-1105", "desc": "Flanax 550mg 10 comp", "campana": "GENOMMA", "clics": 55, "compras": 8, "venta": 980000},
+    {"sku": "SKU-9934", "desc": "Drag Pharma Amoxicilina", "campana": "DRAGPHARMA", "clics": 52, "compras": 14, "venta": 920000},
+    {"sku": "SKU-4456", "desc": "Sinagrip Forte 8 sobres", "campana": "PREP. INVIERNO", "clics": 49, "compras": 19, "venta": 870000}
+]
