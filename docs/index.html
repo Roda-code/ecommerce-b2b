@@ -109,7 +109,7 @@ body.dark td { border-bottom-color:var(--border-dark); }
 tr:hover { background:#fafbfd; }
 body.dark tr:hover { background:rgba(255,255,255,.05); }
 
-.chart-box { background:var(--card); border-radius:10px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.05); margin:12px 0; }
+.chart-box { background:var(--card); border-radius:10px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.05); margin:12px 0; max-height:320px; }
 body.dark .chart-box { background:var(--card-dark); box-shadow:0 1px 3px rgba(0,0,0,.3); }
 
 .chart-box h3 { font-size:13px; font-weight:600; margin-bottom:8px; }
@@ -225,7 +225,7 @@ footer a:hover { text-decoration:underline; }
         <div class="kpi">
             <div class="kpi-label">Venta Marzo 2026</div>
             <div class="kpi-value">$865.4M</div>
-            <div class="kpi-sub"><span style="color:{'var(--success)' if crec_venta > 0 else 'var(--danger)'}">{'▲' if crec_venta > 0 else '▼'} 0.1%</span> vs Mar 2025 · <span class="badge">SAP</span></div>
+            <div class="kpi-sub"><span style="color:var(--success)">▲ 0.1%</span> vs Mar 2025 · <span class="badge">SAP</span></div>
         </div>
         <div class="kpi kpi-green">
             <div class="kpi-label">Margen Bruto</div>
@@ -234,7 +234,7 @@ footer a:hover { text-decoration:underline; }
         </div>
         <div class="kpi">
             <div class="kpi-label">Venta Acum. Retail</div>
-            <div class="kpi-value">$7.23 MM</div>
+            <div class="kpi-value">$7.23MM</div>
             <div class="kpi-sub">672 clientes · 2025-2026</div>
         </div>
         <div class="kpi">
@@ -270,11 +270,11 @@ footer a:hover { text-decoration:underline; }
     <div class="chart-row">
         <div class="chart-box">
             <h3>Ventas Campañas por Mes ($M)</h3>
-            <canvas id="chartVentas6m" height="140"></canvas>
+            <canvas id="chartVentas6m" height="100"></canvas>
         </div>
         <div class="chart-box">
             <h3>Visitas B2B vs Compras</h3>
-            <canvas id="chartVisitasCompras" height="140"></canvas>
+            <canvas id="chartVisitasCompras" height="100"></canvas>
         </div>
     </div>
 
@@ -293,14 +293,14 @@ footer a:hover { text-decoration:underline; }
     <div class="insight">Mismo mes, distinto año. Así se ve el crecimiento real sin estacionalidad.</div>
 
     <div class="kpi-grid">
-        <div class="kpi {'kpi-green' if crec_venta > 0 else 'kpi-red'}">
+        <div class="kpi kpi-green">
             <div class="kpi-label">Cambio en Venta</div>
-            <div class="kpi-value">{'▲' if crec_venta > 0 else '▼'} 0.1%</div>
+            <div class="kpi-value">▲ 0.1%</div>
             <div class="kpi-sub">$864.8M → $865.4M</div>
         </div>
-        <div class="kpi {'kpi-red' if crec_unid < 0 else 'kpi-green'}">
+        <div class="kpi kpi-red">
             <div class="kpi-label">Cambio en Unidades</div>
-            <div class="kpi-value">{'▲' if crec_unid > 0 else '▼'} -4.6%</div>
+            <div class="kpi-value">▼ -4.6%</div>
             <div class="kpi-sub">366,824 → 349,784</div>
         </div>
         <div class="kpi kpi-green">
@@ -361,28 +361,28 @@ footer a:hover { text-decoration:underline; }
         <td>10</td>
         <td style="text-align:right">$4.8M</td>
         <td style="text-align:right;font-weight:600">$4.9M</td>
-        <td style="color:#27ae60;font-weight:700">▲ $73,008 (+2%)</td>
+        <td style="color:#27ae60;font-weight:700">▲ $73.008 (+2%)</td>
         <td><span style="color:#27ae60">+4 crecieron</span> · <span style="color:#0DA7EE">1 nuevos</span> · <span style="color:#e74c3c">4 cayeron</span></td>
     </tr><tr>
         <td><strong>MARATHON</strong></td>
         <td>17</td>
         <td style="text-align:right">$1.9M</td>
         <td style="text-align:right;font-weight:600">$1.6M</td>
-        <td style="color:#e74c3c;font-weight:700">▼ $335,054 (-17%)</td>
+        <td style="color:#e74c3c;font-weight:700">▼ $335.054 (-17%)</td>
         <td><span style="color:#27ae60">+6 crecieron</span> · <span style="color:#0DA7EE">0 nuevos</span> · <span style="color:#e74c3c">8 cayeron</span></td>
     </tr><tr>
         <td><strong>GENOMMA</strong></td>
         <td>3</td>
-        <td style="text-align:right">$54,951</td>
-        <td style="text-align:right;font-weight:600">$408,661</td>
-        <td style="color:#27ae60;font-weight:700">▲ $353,710 (+644%)</td>
+        <td style="text-align:right">$54.951</td>
+        <td style="text-align:right;font-weight:600">$408.661</td>
+        <td style="color:#27ae60;font-weight:700">▲ $353.710 (+644%)</td>
         <td><span style="color:#27ae60">+0 crecieron</span> · <span style="color:#0DA7EE">2 nuevos</span> · <span style="color:#e74c3c">1 cayeron</span></td>
     </tr><tr>
         <td><strong>ANASAC</strong></td>
         <td>13</td>
-        <td style="text-align:right">$35,192</td>
-        <td style="text-align:right;font-weight:600">$55,890</td>
-        <td style="color:#27ae60;font-weight:700">▲ $20,698 (+59%)</td>
+        <td style="text-align:right">$35.192</td>
+        <td style="text-align:right;font-weight:600">$55.890</td>
+        <td style="color:#27ae60;font-weight:700">▲ $20.698 (+59%)</td>
         <td><span style="color:#27ae60">+3 crecieron</span> · <span style="color:#0DA7EE">7 nuevos</span> · <span style="color:#e74c3c">1 cayeron</span></td>
     </tr></tbody>
         </table>
@@ -424,7 +424,7 @@ footer a:hover { text-decoration:underline; }
         <td>112497</td>
         <td>NAPROXENO 550 MG X 10 COMP. REC.</td>
         <td><span class="badge">PREP. INVIERNO</span></td>
-        <td style="text-align:right">$816,660</td>
+        <td style="text-align:right">$816.660</td>
         <td style="text-align:right;font-weight:600">$3.1M</td>
         <td style="color:#27ae60;font-weight:700">▲ 282.1%</td>
     </tr><tr>
@@ -438,7 +438,7 @@ footer a:hover { text-decoration:underline; }
         <td>105112</td>
         <td>TAPSIN CALIENTE DIA PVO. SOL. ORAL X 60 SOBRE</td>
         <td><span class="badge">PREP. INVIERNO</span></td>
-        <td style="text-align:right">$511,227</td>
+        <td style="text-align:right">$511.227</td>
         <td style="text-align:right;font-weight:600">$2.5M</td>
         <td style="color:#27ae60;font-weight:700">▲ 384.2%</td>
     </tr><tr>
@@ -466,14 +466,14 @@ footer a:hover { text-decoration:underline; }
         <td>109095</td>
         <td>VET (MV) NAXPET SUSP. 0.4% / 20 ML X 1 FCO.</td>
         <td><span class="badge">DRAGPHARMA</span></td>
-        <td style="text-align:right">$783,265</td>
+        <td style="text-align:right">$783.265</td>
         <td style="text-align:right;font-weight:600">$1.5M</td>
         <td style="color:#27ae60;font-weight:700">▲ 94.6%</td>
     </tr><tr>
         <td>109095</td>
         <td>VET (MV) NAXPET SUSP. 0.4% / 20 ML X 1 FCO.</td>
         <td><span class="badge">INVIERNO VET</span></td>
-        <td style="text-align:right">$783,265</td>
+        <td style="text-align:right">$783.265</td>
         <td style="text-align:right;font-weight:600">$1.5M</td>
         <td style="color:#27ae60;font-weight:700">▲ 94.6%</td>
     </tr><tr>
@@ -494,7 +494,7 @@ footer a:hover { text-decoration:underline; }
         <td>112679</td>
         <td>KETOPROFENO TU 200 MG X 10 COMP. REC. ENT. LP</td>
         <td><span class="badge">PREP. INVIERNO</span></td>
-        <td style="text-align:right">$4,920</td>
+        <td style="text-align:right">$4.920</td>
         <td style="text-align:right;font-weight:600">$1.3M</td>
         <td style="color:#27ae60;font-weight:700">▲ 26877.5%</td>
     </tr><tr>
@@ -508,7 +508,7 @@ footer a:hover { text-decoration:underline; }
         <td>106793</td>
         <td>BILIDREN 20 MG X 30 COMP.</td>
         <td><span class="badge">PREP. INVIERNO</span></td>
-        <td style="text-align:right">$313,146</td>
+        <td style="text-align:right">$313.146</td>
         <td style="text-align:right;font-weight:600">$1.3M</td>
         <td style="color:#27ae60;font-weight:700">▲ 317.4%</td>
     </tr><tr>
@@ -529,14 +529,14 @@ footer a:hover { text-decoration:underline; }
         <td>109086</td>
         <td>VET (MV) MELOXIVET SOL. 60 ML X 1 FCO.</td>
         <td><span class="badge">INVIERNO VET</span></td>
-        <td style="text-align:right">$984,720</td>
+        <td style="text-align:right">$984.720</td>
         <td style="text-align:right;font-weight:600">$1.2M</td>
         <td style="color:#27ae60;font-weight:700">▲ 25.0%</td>
     </tr><tr>
         <td>109086</td>
         <td>VET (MV) MELOXIVET SOL. 60 ML X 1 FCO.</td>
         <td><span class="badge">DRAGPHARMA</span></td>
-        <td style="text-align:right">$984,720</td>
+        <td style="text-align:right">$984.720</td>
         <td style="text-align:right;font-weight:600">$1.2M</td>
         <td style="color:#27ae60;font-weight:700">▲ 25.0%</td>
     </tr></tbody>
@@ -570,7 +570,7 @@ footer a:hover { text-decoration:underline; }
         </div>
         <div class="kpi">
             <div class="kpi-label">Ticket Promedio</div>
-            <div class="kpi-value">$1,912</div>
+            <div class="kpi-value">$1.912</div>
             <div class="kpi-sub">Venta / unidad promedio</div>
         </div>
     </div>
@@ -578,11 +578,11 @@ footer a:hover { text-decoration:underline; }
     <div class="chart-row">
         <div class="chart-box">
             <h3>Ventas por Mes ($M)</h3>
-            <canvas id="chartCampVentas" height="140"></canvas>
+            <canvas id="chartCampVentas" height="100"></canvas>
         </div>
         <div class="chart-box">
             <h3>Unidades y Campañas Activas</h3>
-            <canvas id="chartCampUnid" height="140"></canvas>
+            <canvas id="chartCampUnid" height="100"></canvas>
         </div>
     </div>
 
@@ -615,7 +615,7 @@ footer a:hover { text-decoration:underline; }
         <td>100419</td>
         <td>ABRILAR 35 MG / 5 ML JBE. X 100 ML</td>
         <td>🤧 Invierno</td>
-        <td style="text-align:right">$602,879</td>
+        <td style="text-align:right">$602.879</td>
         <td style="text-align:right;font-weight:600">$4.0M</td>
         <td style="color:#27ae60;font-weight:700">568.5%</td>
     </tr><tr>
@@ -629,21 +629,21 @@ footer a:hover { text-decoration:underline; }
         <td>105113</td>
         <td>TAPSIN CALIENTE NOCHE LIMONADA PVO. SOL.</td>
         <td>🤧 Invierno</td>
-        <td style="text-align:right">$963,545</td>
+        <td style="text-align:right">$963.545</td>
         <td style="text-align:right;font-weight:600">$3.2M</td>
         <td style="color:#27ae60;font-weight:700">228.4%</td>
     </tr><tr>
         <td>105112</td>
         <td>TAPSIN CALIENTE DIA PVO. SOL. ORAL X 60 </td>
         <td>🤧 Invierno</td>
-        <td style="text-align:right">$267,340</td>
+        <td style="text-align:right">$267.340</td>
         <td style="text-align:right;font-weight:600">$2.5M</td>
         <td style="color:#27ae60;font-weight:700">850.1%</td>
     </tr><tr>
         <td>100657</td>
         <td>ALEXIA 120 MG X 30 COMP. REC.</td>
         <td>🤧 Invierno</td>
-        <td style="text-align:right">$15,685</td>
+        <td style="text-align:right">$15.685</td>
         <td style="text-align:right;font-weight:600">$1.6M</td>
         <td style="color:#27ae60;font-weight:700">10400%</td>
     </tr><tr>
@@ -664,7 +664,7 @@ footer a:hover { text-decoration:underline; }
         <td>100488</td>
         <td>ACOTOL X 28 COMP. REC.</td>
         <td>🤧 Invierno</td>
-        <td style="text-align:right">$354,360</td>
+        <td style="text-align:right">$354.360</td>
         <td style="text-align:right;font-weight:600">$1.4M</td>
         <td style="color:#27ae60;font-weight:700">281.1%</td>
     </tr><tr>
@@ -685,21 +685,21 @@ footer a:hover { text-decoration:underline; }
         <td>106793</td>
         <td>BILIDREN 20 MG X 30 COMP.</td>
         <td>🤧 Invierno</td>
-        <td style="text-align:right">$516,750</td>
+        <td style="text-align:right">$516.750</td>
         <td style="text-align:right;font-weight:600">$1.5M</td>
         <td style="color:#27ae60;font-weight:700">182.7%</td>
     </tr><tr>
         <td>101284</td>
         <td>CAM X 30 COMP.</td>
         <td>🤧 Invierno</td>
-        <td style="text-align:right">$115,632</td>
+        <td style="text-align:right">$115.632</td>
         <td style="text-align:right;font-weight:600">$1.3M</td>
         <td style="color:#27ae60;font-weight:700">1029.6%</td>
     </tr><tr>
         <td>109086</td>
         <td>VET (MV) MELOXIVET SOL. 60 ML X 1 FCO.</td>
         <td>🐾 Veterinaria</td>
-        <td style="text-align:right">$915,030</td>
+        <td style="text-align:right">$915.030</td>
         <td style="text-align:right;font-weight:600">$1.5M</td>
         <td style="color:#27ae60;font-weight:700">65.7%</td>
     </tr></tbody>
@@ -782,11 +782,11 @@ footer a:hover { text-decoration:underline; }
     <div class="chart-row">
         <div class="chart-box">
             <h3>Fuente de Tráfico</h3>
-            <canvas id="chartFuente" height="140"></canvas>
+            <canvas id="chartFuente" height="100"></canvas>
         </div>
         <div class="chart-box">
             <h3>Visitas B2B vs Compras (mensual)</h3>
-            <canvas id="chartVisMes" height="140"></canvas>
+            <canvas id="chartVisMes" height="100"></canvas>
         </div>
     </div>
 
@@ -846,21 +846,21 @@ footer a:hover { text-decoration:underline; }
         <td style="text-align:right">95</td>
         <td style="text-align:right">41</td>
         <td style="text-align:right">6</td>
-        <td style="text-align:right;font-weight:600">$900,000</td>
+        <td style="text-align:right;font-weight:600">$900.000</td>
         <td style="color:#27ae60;font-weight:700;text-align:right">6.3%</td>
     </tr><tr>
         <td><strong>MARATHON</strong></td>
         <td style="text-align:right">88</td>
         <td style="text-align:right">34</td>
         <td style="text-align:right">5</td>
-        <td style="text-align:right;font-weight:600">$700,000</td>
+        <td style="text-align:right;font-weight:600">$700.000</td>
         <td style="color:#27ae60;font-weight:700;text-align:right">5.7%</td>
     </tr><tr>
         <td><strong>ANASAC</strong></td>
         <td style="text-align:right">72</td>
         <td style="text-align:right">28</td>
         <td style="text-align:right">4</td>
-        <td style="text-align:right;font-weight:600">$500,000</td>
+        <td style="text-align:right;font-weight:600">$500.000</td>
         <td style="color:#27ae60;font-weight:700;text-align:right">5.6%</td>
     </tr></tbody>
         </table>
@@ -869,11 +869,11 @@ footer a:hover { text-decoration:underline; }
     <div class="chart-row">
         <div class="chart-box">
             <h3>Visitas vs Clics por Campaña</h3>
-            <canvas id="chartDigCamp" height="140"></canvas>
+            <canvas id="chartDigCamp" height="100"></canvas>
         </div>
         <div class="chart-box">
             <h3>Compras por Campaña</h3>
-            <canvas id="chartDigCompras" height="140"></canvas>
+            <canvas id="chartDigCompras" height="100"></canvas>
         </div>
     </div>
 
@@ -944,21 +944,21 @@ footer a:hover { text-decoration:underline; }
         <td><span class="badge">GENOMMA</span></td>
         <td style="text-align:right">55</td>
         <td style="text-align:right">8</td>
-        <td style="text-align:right;font-weight:600">$980,000</td>
+        <td style="text-align:right;font-weight:600">$980.000</td>
     </tr><tr>
         <td>SKU-9934</td>
         <td>Drag Pharma Amoxicilina</td>
         <td><span class="badge">DRAGPHARMA</span></td>
         <td style="text-align:right">52</td>
         <td style="text-align:right">14</td>
-        <td style="text-align:right;font-weight:600">$920,000</td>
+        <td style="text-align:right;font-weight:600">$920.000</td>
     </tr><tr>
         <td>SKU-4456</td>
         <td>Sinagrip Forte 8 sobres</td>
         <td><span class="badge">PREP. INVIERNO</span></td>
         <td style="text-align:right">49</td>
         <td style="text-align:right">19</td>
-        <td style="text-align:right;font-weight:600">$870,000</td>
+        <td style="text-align:right;font-weight:600">$870.000</td>
     </tr></tbody>
         </table>
     </div>
@@ -1018,7 +1018,7 @@ footer a:hover { text-decoration:underline; }
 
     <div class="chart-box">
         <h3>Tasa de Apertura por Campaña</h3>
-        <canvas id="chartMailingTasas" height="140"></canvas>
+        <canvas id="chartMailingTasas" height="100"></canvas>
     </div>
 
     <div class="table-wrap">
@@ -1087,11 +1087,11 @@ footer a:hover { text-decoration:underline; }
     <div class="chart-row">
         <div class="chart-box">
             <h3>Estado del Catálogo</h3>
-            <canvas id="chartSKU" height="140"></canvas>
+            <canvas id="chartSKU" height="100"></canvas>
         </div>
         <div class="chart-box">
             <h3>Proporción de SKUs</h3>
-            <canvas id="chartSKUBar" height="140"></canvas>
+            <canvas id="chartSKUBar" height="100"></canvas>
         </div>
     </div>
 
@@ -1181,7 +1181,7 @@ footer a:hover { text-decoration:underline; }
         </div>
         <div class="kpi">
             <div class="kpi-label">Venta Total</div>
-            <div class="kpi-value">$7.23 MM</div>
+            <div class="kpi-value">$7.23MM</div>
             <div class="kpi-sub">Acumulado 2025-2026</div>
         </div>
         <div class="kpi kpi-orange">
@@ -1571,7 +1571,7 @@ function initCharts() {
 
     var chartOpts = {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: { legend: { display: false }, tooltip: { bodyFont: { size: 11 } } },
         scales: { x: { ticks: { font: { size: 10 } } }, y: { ticks: { font: { size: 10 } } } }
     };
@@ -1606,7 +1606,7 @@ function initCharts() {
                 ]
             },
             options: {
-                responsive: true, maintainAspectRatio: true,
+                responsive: true, maintainAspectRatio: false,
                 plugins: { legend: { display: true, labels: { font: { size: 10 } } } },
                 scales: {
                     y: { position: 'left', ticks: { font: { size: 10 } } },
@@ -1645,7 +1645,7 @@ function initCharts() {
                 ]
             },
             options: {
-                responsive: true, maintainAspectRatio: true,
+                responsive: true, maintainAspectRatio: false,
                 plugins: { legend: { display: true, labels: { font: { size: 10 } } } },
                 scales: {
                     y: { position:'left', ticks: { font: { size: 10 } } },
@@ -1665,7 +1665,7 @@ function initCharts() {
                 labels: ['Top ' + pareto + ' (80% venta)', 'Resto ' + (n - pareto) + ' (20% venta)'],
                 datasets: [{ data: [pareto, n - pareto], backgroundColor: [C.primary, '#e8ecf1'], borderWidth: 0 }]
             },
-            options: { responsive: true, maintainAspectRatio: true, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } } }
+            options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } } }
         });
     }
 
@@ -1678,7 +1678,7 @@ function initCharts() {
                 datasets: [{ data: [4184, 2270, 11588],
                     backgroundColor: [C.success, C.warning, C.danger], borderWidth: 0 }]
             },
-            options: { responsive: true, maintainAspectRatio: true, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } } }
+            options: { responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } } }
         });
     }
 
@@ -1703,7 +1703,7 @@ function initCharts() {
                 labels: ["B\u00fasqueda Org\u00e1nica (Google)", "Email / MailUp", "Directo (URL)", "Campa\u00f1as Cat\u00e1logo (Publitas)", "Redes Sociales"],
                 datasets: [{ data: [4120, 2859, 2680, 1540, 860], backgroundColor: [C.primary, C.warning, C.dark, C.success, C.purple], borderWidth: 0 }]
             },
-            options: { responsive: true, maintainAspectRatio: true, cutout: '55%', plugins: { legend: { position: 'bottom', labels: { font: { size: 9 } } } } }
+            options: { responsive: true, maintainAspectRatio: false, cutout: '55%', plugins: { legend: { position: 'bottom', labels: { font: { size: 9 } } } } }
         });
     }
 
@@ -1719,7 +1719,7 @@ function initCharts() {
                 ]
             },
             options: {
-                responsive: true, maintainAspectRatio: true,
+                responsive: true, maintainAspectRatio: false,
                 plugins: { legend: { display: true, labels: { font: { size: 9 } } } },
                 scales: {
                     y: { position: 'left', ticks: { font: { size: 10 } } },
@@ -1741,7 +1741,7 @@ function initCharts() {
                 ]
             },
             options: {
-                responsive: true, maintainAspectRatio: true, indexAxis: 'y',
+                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
                 plugins: { legend: { display: true, labels: { font: { size: 9 } } } },
                 scales: { x: { ticks: { font: { size: 10 } } }, y: { ticks: { font: { size: 9 } } } }
             }
@@ -1757,7 +1757,7 @@ function initCharts() {
                 datasets: [{ label: 'Compras', data: [38, 22, 14, 18, 8, 6, 5, 4], backgroundColor: C.success + 'cc', borderRadius: 4 }]
             },
             options: {
-                responsive: true, maintainAspectRatio: true, indexAxis: 'y',
+                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
                 plugins: { legend: { display: false } },
                 scales: { x: { ticks: { font: { size: 10 } } }, y: { ticks: { font: { size: 9 } } } }
             }
@@ -1779,7 +1779,7 @@ function initCharts() {
                 }]
             },
             options: {
-                responsive: true, maintainAspectRatio: true,
+                responsive: true, maintainAspectRatio: false,
                 plugins: { legend: { display: false }, tooltip: { bodyFont: { size: 11 } } },
                 scales: { x: { ticks: { font: { size: 10 } } }, y: { ticks: { font: { size: 10 } } } }
             }

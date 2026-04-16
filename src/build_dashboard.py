@@ -94,17 +94,25 @@ avg_tasa_apertura = round(sum(m['tasa_apertura'] for m in mailing_list) / len(ma
 avg_tasa_clic = round(sum(m['tasa_clic'] for m in mailing_list) / len(mailing_list), 1) if mailing_list else 0
 total_enviados = sum(m['enviados'] for m in mailing_list)
 
+# Pre-computed conditional values (for f-string compatibility)
+arrow_venta = '▲' if crec_venta > 0 else '▼'
+color_venta = 'var(--success)' if crec_venta > 0 else 'var(--danger)'
+kpi_class_venta = 'kpi-green' if crec_venta > 0 else 'kpi-red'
+arrow_unid = '▲' if crec_unid > 0 else '▼'
+kpi_class_unid = 'kpi-red' if crec_unid < 0 else 'kpi-green'
+
 # ============================================================
 # HTML GENERATION
 # ============================================================
 
 def fmt_clp(n):
+    """Format CLP currency with dots as thousands separator (Chilean format)."""
     if n >= 1_000_000_000:
-        return f"${n/1_000_000_000:,.2f} MM"
+        return f"${n/1_000_000_000:,.2f}MM".replace(",", ".")
     elif n >= 1_000_000:
-        return f"${n/1_000_000:,.1f}M"
+        return f"${n/1_000_000:,.1f}M".replace(",", ".")
     else:
-        return f"${n:,.0f}"
+        return f"${n:,.0f}".replace(",", ".")
 
 def fmt_pct(n):
     return f"{n:+.1f}%" if n else "—"
@@ -362,7 +370,7 @@ body.dark td {{ border-bottom-color:var(--border-dark); }}
 tr:hover {{ background:#fafbfd; }}
 body.dark tr:hover {{ background:rgba(255,255,255,.05); }}
 
-.chart-box {{ background:var(--card); border-radius:10px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.05); margin:12px 0; }}
+.chart-box {{ background:var(--card); border-radius:10px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.05); margin:12px 0; max-height:320px; }}
 body.dark .chart-box {{ background:var(--card-dark); box-shadow:0 1px 3px rgba(0,0,0,.3); }}
 
 .chart-box h3 {{ font-size:13px; font-weight:600; margin-bottom:8px; }}
@@ -478,7 +486,7 @@ footer a:hover {{ text-decoration:underline; }}
         <div class="kpi">
             <div class="kpi-label">Venta Marzo 2026</div>
             <div class="kpi-value">{fmt_clp(venta_26)}</div>
-            <div class="kpi-sub"><span style="color:{{'var(--success)' if crec_venta > 0 else 'var(--danger)'}}">{{'▲' if crec_venta > 0 else '▼'}} {crec_venta}%</span> vs Mar 2025 · <span class="badge">SAP</span></div>
+            <div class="kpi-sub"><span style="color:{color_venta}">{arrow_venta} {crec_venta}%</span> vs Mar 2025 · <span class="badge">SAP</span></div>
         </div>
         <div class="kpi kpi-green">
             <div class="kpi-label">Margen Bruto</div>
@@ -523,11 +531,11 @@ footer a:hover {{ text-decoration:underline; }}
     <div class="chart-row">
         <div class="chart-box">
             <h3>Ventas Campañas por Mes ($M)</h3>
-            <canvas id="chartVentas6m" height="140"></canvas>
+            <canvas id="chartVentas6m" height="100"></canvas>
         </div>
         <div class="chart-box">
             <h3>Visitas B2B vs Compras</h3>
-            <canvas id="chartVisitasCompras" height="140"></canvas>
+            <canvas id="chartVisitasCompras" height="100"></canvas>
         </div>
     </div>
 
@@ -546,14 +554,14 @@ footer a:hover {{ text-decoration:underline; }}
     <div class="insight">Mismo mes, distinto año. Así se ve el crecimiento real sin estacionalidad.</div>
 
     <div class="kpi-grid">
-        <div class="kpi {{'kpi-green' if crec_venta > 0 else 'kpi-red'}}">
+        <div class="kpi {kpi_class_venta}">
             <div class="kpi-label">Cambio en Venta</div>
-            <div class="kpi-value">{{'▲' if crec_venta > 0 else '▼'}} {crec_venta}%</div>
+            <div class="kpi-value">{arrow_venta} {crec_venta}%</div>
             <div class="kpi-sub">{fmt_clp(venta_25)} → {fmt_clp(venta_26)}</div>
         </div>
-        <div class="kpi {{'kpi-red' if crec_unid < 0 else 'kpi-green'}}">
+        <div class="kpi {kpi_class_unid}">
             <div class="kpi-label">Cambio en Unidades</div>
-            <div class="kpi-value">{{'▲' if crec_unid > 0 else '▼'}} {crec_unid}%</div>
+            <div class="kpi-value">{arrow_unid} {crec_unid}%</div>
             <div class="kpi-sub">{unid_25:,} → {unid_26:,}</div>
         </div>
         <div class="kpi kpi-green">
@@ -635,11 +643,11 @@ footer a:hover {{ text-decoration:underline; }}
     <div class="chart-row">
         <div class="chart-box">
             <h3>Ventas por Mes ($M)</h3>
-            <canvas id="chartCampVentas" height="140"></canvas>
+            <canvas id="chartCampVentas" height="100"></canvas>
         </div>
         <div class="chart-box">
             <h3>Unidades y Campañas Activas</h3>
-            <canvas id="chartCampUnid" height="140"></canvas>
+            <canvas id="chartCampUnid" height="100"></canvas>
         </div>
     </div>
 
@@ -734,11 +742,11 @@ footer a:hover {{ text-decoration:underline; }}
     <div class="chart-row">
         <div class="chart-box">
             <h3>Fuente de Tráfico</h3>
-            <canvas id="chartFuente" height="140"></canvas>
+            <canvas id="chartFuente" height="100"></canvas>
         </div>
         <div class="chart-box">
             <h3>Visitas B2B vs Compras (mensual)</h3>
-            <canvas id="chartVisMes" height="140"></canvas>
+            <canvas id="chartVisMes" height="100"></canvas>
         </div>
     </div>
 
@@ -765,11 +773,11 @@ footer a:hover {{ text-decoration:underline; }}
     <div class="chart-row">
         <div class="chart-box">
             <h3>Visitas vs Clics por Campaña</h3>
-            <canvas id="chartDigCamp" height="140"></canvas>
+            <canvas id="chartDigCamp" height="100"></canvas>
         </div>
         <div class="chart-box">
             <h3>Compras por Campaña</h3>
-            <canvas id="chartDigCompras" height="140"></canvas>
+            <canvas id="chartDigCompras" height="100"></canvas>
         </div>
     </div>
 
@@ -844,7 +852,7 @@ footer a:hover {{ text-decoration:underline; }}
 
     <div class="chart-box">
         <h3>Tasa de Apertura por Campaña</h3>
-        <canvas id="chartMailingTasas" height="140"></canvas>
+        <canvas id="chartMailingTasas" height="100"></canvas>
     </div>
 
     <div class="table-wrap">
@@ -905,11 +913,11 @@ footer a:hover {{ text-decoration:underline; }}
     <div class="chart-row">
         <div class="chart-box">
             <h3>Estado del Catálogo</h3>
-            <canvas id="chartSKU" height="140"></canvas>
+            <canvas id="chartSKU" height="100"></canvas>
         </div>
         <div class="chart-box">
             <h3>Proporción de SKUs</h3>
-            <canvas id="chartSKUBar" height="140"></canvas>
+            <canvas id="chartSKUBar" height="100"></canvas>
         </div>
     </div>
 
@@ -1159,7 +1167,7 @@ function initCharts() {{
 
     var chartOpts = {{
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {{ legend: {{ display: false }}, tooltip: {{ bodyFont: {{ size: 11 }} }} }},
         scales: {{ x: {{ ticks: {{ font: {{ size: 10 }} }} }}, y: {{ ticks: {{ font: {{ size: 10 }} }} }} }}
     }};
@@ -1194,7 +1202,7 @@ function initCharts() {{
                 ]
             }},
             options: {{
-                responsive: true, maintainAspectRatio: true,
+                responsive: true, maintainAspectRatio: false,
                 plugins: {{ legend: {{ display: true, labels: {{ font: {{ size: 10 }} }} }} }},
                 scales: {{
                     y: {{ position: 'left', ticks: {{ font: {{ size: 10 }} }} }},
@@ -1233,7 +1241,7 @@ function initCharts() {{
                 ]
             }},
             options: {{
-                responsive: true, maintainAspectRatio: true,
+                responsive: true, maintainAspectRatio: false,
                 plugins: {{ legend: {{ display: true, labels: {{ font: {{ size: 10 }} }} }} }},
                 scales: {{
                     y: {{ position:'left', ticks: {{ font: {{ size: 10 }} }} }},
@@ -1253,7 +1261,7 @@ function initCharts() {{
                 labels: ['Top ' + pareto + ' (80% venta)', 'Resto ' + (n - pareto) + ' (20% venta)'],
                 datasets: [{{ data: [pareto, n - pareto], backgroundColor: [C.primary, '#e8ecf1'], borderWidth: 0 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: true, cutout: '65%', plugins: {{ legend: {{ position: 'bottom', labels: {{ font: {{ size: 10 }} }} }} }} }}
+            options: {{ responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: {{ legend: {{ position: 'bottom', labels: {{ font: {{ size: 10 }} }} }} }} }}
         }});
     }}
 
@@ -1266,7 +1274,7 @@ function initCharts() {{
                 datasets: [{{ data: [{skus['estados'].get('Con Rotación',0)}, {skus['estados'].get('Abandonados',0)}, {skus['estados'].get('Nunca Rotados',0)}],
                     backgroundColor: [C.success, C.warning, C.danger], borderWidth: 0 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: true, cutout: '60%', plugins: {{ legend: {{ position: 'bottom', labels: {{ font: {{ size: 10 }} }} }} }} }}
+            options: {{ responsive: true, maintainAspectRatio: false, cutout: '60%', plugins: {{ legend: {{ position: 'bottom', labels: {{ font: {{ size: 10 }} }} }} }} }}
         }});
     }}
 
@@ -1291,7 +1299,7 @@ function initCharts() {{
                 labels: {fuente_labels},
                 datasets: [{{ data: {fuente_data}, backgroundColor: [C.primary, C.warning, C.dark, C.success, C.purple], borderWidth: 0 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: true, cutout: '55%', plugins: {{ legend: {{ position: 'bottom', labels: {{ font: {{ size: 9 }} }} }} }} }}
+            options: {{ responsive: true, maintainAspectRatio: false, cutout: '55%', plugins: {{ legend: {{ position: 'bottom', labels: {{ font: {{ size: 9 }} }} }} }} }}
         }});
     }}
 
@@ -1307,7 +1315,7 @@ function initCharts() {{
                 ]
             }},
             options: {{
-                responsive: true, maintainAspectRatio: true,
+                responsive: true, maintainAspectRatio: false,
                 plugins: {{ legend: {{ display: true, labels: {{ font: {{ size: 9 }} }} }} }},
                 scales: {{
                     y: {{ position: 'left', ticks: {{ font: {{ size: 10 }} }} }},
@@ -1329,7 +1337,7 @@ function initCharts() {{
                 ]
             }},
             options: {{
-                responsive: true, maintainAspectRatio: true, indexAxis: 'y',
+                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
                 plugins: {{ legend: {{ display: true, labels: {{ font: {{ size: 9 }} }} }} }},
                 scales: {{ x: {{ ticks: {{ font: {{ size: 10 }} }} }}, y: {{ ticks: {{ font: {{ size: 9 }} }} }} }}
             }}
@@ -1345,7 +1353,7 @@ function initCharts() {{
                 datasets: [{{ label: 'Compras', data: {camp_dig_compras}, backgroundColor: C.success + 'cc', borderRadius: 4 }}]
             }},
             options: {{
-                responsive: true, maintainAspectRatio: true, indexAxis: 'y',
+                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
                 plugins: {{ legend: {{ display: false }} }},
                 scales: {{ x: {{ ticks: {{ font: {{ size: 10 }} }} }}, y: {{ ticks: {{ font: {{ size: 9 }} }} }} }}
             }}
@@ -1367,7 +1375,7 @@ function initCharts() {{
                 }}]
             }},
             options: {{
-                responsive: true, maintainAspectRatio: true,
+                responsive: true, maintainAspectRatio: false,
                 plugins: {{ legend: {{ display: false }}, tooltip: {{ bodyFont: {{ size: 11 }} }} }},
                 scales: {{ x: {{ ticks: {{ font: {{ size: 10 }} }} }}, y: {{ ticks: {{ font: {{ size: 10 }} }} }} }}
             }}
