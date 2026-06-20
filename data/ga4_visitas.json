@@ -2,28 +2,28 @@
     "visitas_fuente": [
         {
             "fuente": "Directo (URL)",
-            "sesiones": 17722,
-            "pct": 90.1
+            "sesiones": 17430,
+            "pct": 88.4
         },
         {
             "fuente": "Email / MailUp",
-            "sesiones": 796,
-            "pct": 4
+            "sesiones": 767,
+            "pct": 3.9
         },
         {
             "fuente": "Campañas Catálogo (Publitas)",
-            "sesiones": 558,
-            "pct": 2.8
+            "sesiones": 542,
+            "pct": 2.7
         },
         {
             "fuente": "Búsqueda Orgánica (Google)",
-            "sesiones": 504,
-            "pct": 2.6
+            "sesiones": 499,
+            "pct": 2.5
         },
         {
             "fuente": "Sin clasificar",
-            "sesiones": 87,
-            "pct": 0.4
+            "sesiones": 474,
+            "pct": 2.4
         },
         {
             "fuente": "Redes Sociales",
@@ -76,10 +76,10 @@
         },
         {
             "mes": "Jun 2026",
-            "visitas_b2b": 12636,
-            "visitas_catalogo": 2022,
-            "compras": 111,
-            "venta_online": 39838456
+            "visitas_b2b": 13206,
+            "visitas_catalogo": 2113,
+            "compras": 113,
+            "venta_online": 41676476
         }
     ]
 }
